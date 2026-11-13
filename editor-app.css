@@ -5,3 +5,6 @@
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}}
 
 .ai-picker .model-label{margin-top:12px;margin-bottom:6px}.ai-picker input{width:100%;font-size:11px;padding:7px 9px}.ai-picker input:disabled{opacity:.45;cursor:not-allowed}
+
+/* Keep desktop workbench panels independently scrollable. */
+@media(min-width:851px){.app-layout{height:calc(100svh - 72px);min-height:0;overflow:clip}.media-panel,.edit-panel{overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--line) var(--bg)}.chat-panel{height:100%;position:relative}.viewer{height:clamp(260px,31vw,440px)}}
