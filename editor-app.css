@@ -8,3 +8,5 @@
 
 /* Keep desktop workbench panels independently scrollable. */
 @media(min-width:851px){.app-layout{height:calc(100svh - 72px);min-height:0;overflow:clip}.media-panel,.edit-panel{overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--line) var(--bg)}.chat-panel{height:100%;position:relative}.viewer{height:clamp(260px,31vw,440px)}}
+
+@media(min-width:851px){.app-layout{grid-template-rows:minmax(0,1fr)}.media-panel,.edit-panel{min-height:0}.chat-panel{height:calc(100svh - 72px);min-height:0;overflow:clip}.chat-messages{min-height:0}}
