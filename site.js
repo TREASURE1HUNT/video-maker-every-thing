@@ -1,5 +1,5 @@
 const dialog=document.querySelector('#workspace-dialog');
-document.querySelector('.account-button')?.addEventListener('click',()=>location.href='workspace.html');
+document.querySelector('.account-button')?.addEventListener('click',()=>location.href='account.html');
 document.querySelector('.dialog-close')?.addEventListener('click',()=>dialog.close());
 dialog?.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close()}});
 const reel=document.querySelector('#showreel');

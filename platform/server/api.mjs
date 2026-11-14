@@ -1,3 +1,4 @@
+import {account} from './account.mjs';
 import {billing,requirePaid,requireModel,planCatalog} from './billing.mjs';
 const now=()=>new Date().toISOString(), uid=()=>crypto.randomUUID();
 const fail=(status,message)=>{throw Object.assign(new Error(message),{status})};
@@ -19,7 +20,7 @@ async function identity(req,env){
  if(!email)fail(401,'Войдите через ChatGPT');
  let user=await first(env.DB,'SELECT * FROM users WHERE email=?',email);
  if(!user&&env.ADMIN_EMAIL&&email===env.ADMIN_EMAIL.toLowerCase()){
-  await stmt(env.DB,"INSERT OR IGNORE INTO users VALUES(?,?,?,'owner','active','team',0,'[\"*\"]',?)",uid(),email,'Владелец',now()).run();
+  await stmt(env.DB,"INSERT OR IGNORE INTO users VALUES(?,?,?,'owner','active','free',0,'[\"*\"]',?)",uid(),email,'Владелец',now()).run();
   user=await first(env.DB,'SELECT * FROM users WHERE email=?',email);
  }
  if(!user){await stmt(env.DB,"INSERT OR IGNORE INTO users VALUES(?,?,?,'user','active','free',0,'[\"*\"]',?)",uid(),email,email.split('@')[0],now()).run();user=await first(env.DB,'SELECT * FROM users WHERE email=?',email)}
@@ -97,7 +98,7 @@ export async function api(req,env){
   if(req.method!=='GET'&&req.headers.get('Origin')&&req.headers.get('Origin')!==url.origin)fail(403,'Другой источник запроса');
   if(path==='/v1/chat'&&req.method==='POST')return await gateway(req,env);
   if(path==='/api/redeem'&&req.method==='POST'){const {user,token}=await tokenUser(req,env);if(token.scope!=='promo:redeem')fail(403,'Токен не разрешает активацию промокодов');return json(await redeem(env.DB,user,(await body(req)).code))}
-  const u=await identity(req,env),perms=permissions[u.role]||[];const customerResult=await billing(req,env,u);if(customerResult)return customerResult;
+  const u=await identity(req,env),perms=permissions[u.role]||[];const accountResult=await account(req,env,u);if(accountResult)return accountResult;const customerResult=await billing(req,env,u);if(customerResult)return customerResult;
   if(path==='/api/me')return json({user:u,permissions:perms,gatewayConfigured:!!env.AI_GATEWAY_URL});
   if(!perms.length)fail(403,'Требуется роль администратора');
   const section=path.split('/')[3];
