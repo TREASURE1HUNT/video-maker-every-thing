@@ -10,6 +10,6 @@ await writeFile('server/assets.generated.mjs','export default '+JSON.stringify(a
 await mkdir('dist/server',{recursive:true});
 await bundle({entryPoints:['server/worker.mjs'],outfile:'dist/server/index.js',bundle:true,format:'esm',platform:'browser',target:'es2022',minify:true});
 await mkdir('dist/.openai',{recursive:true});
-await cp('.openai/hosting.json','dist/.openai/hosting.json');
+try{await cp('.openai/hosting.json','dist/.openai/hosting.json')}catch(e){if(e.code!=='ENOENT')throw e;await cp('hosting.example.json','dist/.openai/hosting.json')}
 await cp('drizzle','dist/.openai/drizzle',{recursive:true});
 console.log('ADMIN_BUILD_OK');
