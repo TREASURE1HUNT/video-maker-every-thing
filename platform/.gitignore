@@ -1,0 +1,6 @@
+node_modules/
+admin/build/
+.env
+.dev.vars
+*.sqlite
+*.sqlite-*

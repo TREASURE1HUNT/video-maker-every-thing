@@ -1,25 +1,15 @@
 # Video Maker Every Thing
 
-Multipage video studio concept with an Invideo-inspired editorial design.
+[Открыть студию](https://treasure1hunt.github.io/video-maker-every-thing/workspace.html)
 
-Pages: home, examples, product, editor, order brief.
+Русскоязычная локальная видеостудия: проекты, шесть монтажных сценариев, бренд-кит, монтажный план по правилам, ручной таймлайн, обрезка/разделение/скорость, цвет/кадр, текст, SRT, музыка, контрольные точки и экспорт WebM/PNG/JSON/TXT/SRT.
 
-Working demo features: local video preview, text styling, aspect ratio selection, sample transitions, PNG cover export and downloadable brief. AI montage, speech recognition and rendered MP4 export are not connected.
+Материалы и проекты сохраняются в IndexedDB текущего браузера/домена. Держите резервный JSON и исходники. JSON не содержит медиа.
 
-## Run locally
+[Администрирование](https://video-maker-every-thing.izhanshahfarul.chatgpt.site/admin/) опубликовано отдельно на приватном Sites: Worker + D1, ChatGPT sign-in и серверный RBAC. Компоненты Button/Card взяты из Qualiora/Shadboard, MIT; лицензия в platform/admin/SHADBOARD-LICENSE.txt.
 
-python -m http.server 4173
+Исходники backend/admin: platform/. npm ci, npm test, npm run build (Node24+). В production необходимы корректный hosting manifest и доверенный Sites ingress. scripts/preview-admin.mjs — только loopback-тест с фиктивной идентичностью, не публичный сервер. Данные preview не поставляются.
 
-Open http://127.0.0.1:4173/.
+[Подробный разбор InVideo и статусы реализации](platform/FEATURE_AUDIT.md). Полный паритет InVideo не заявляется. Нейросети требуют серверного адаптера; автоматическая транскрипция, генерация медиа, cloud MP4, собственный MCP, многодорожечный NLE, совместная работа и экспорт NLE-проектов ещё не реализованы.
 
-## Hosting
-
-Static HTML/CSS/JavaScript. GitHub Pages: deploy main branch, root directory.
-
-Original logo and cinematic illustration generated for this project. Demo MP4s are illustrative assets created for the website, not exports from the editor. Three.js 0.170.0 is distributed under the MIT license: https://github.com/mrdoob/three.js/blob/r170/LICENSE.
-
-## Studio workbench
-
-The editor now includes local video/photo/audio import, a scene timeline, trim/speed/reorder/undo, text overlays, SRT import/export, background music, IndexedDB persistence, PNG covers, JSON projects, TXT briefs and real-time WebM recording.
-
-The local assistant is rule-based, not a neural model. Provider/model selection and a configurable server URL are ready for an external AI backend. No provider API keys are embedded. See [EDITOR_GUIDE.md](EDITOR_GUIDE.md) and [AI_ENDPOINT.md](AI_ENDPOINT.md).
+[Руководство редактора](EDITOR_GUIDE.md) · [Администрирование](platform/ADMIN_GUIDE.md)
