@@ -1,3 +1,4 @@
+import './build-frontend.mjs';
 import {build} from 'vite';
 import {build as bundle} from 'esbuild';
 import {readFile,writeFile,mkdir,readdir,cp} from 'node:fs/promises';

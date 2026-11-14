@@ -13,5 +13,5 @@ export default {async fetch(req,env){
  // The public website remains on GitHub Pages; private mirror shares the authenticated API origin.
  if(req.method!=='GET'&&req.method!=='HEAD')return new Response('Method not allowed',{status:405});
  const target=new URL('https://treasure1hunt.github.io/video-maker-every-thing'+url.pathname+url.search);
- return fetch(target,{method:req.method});
+ const response=await fetch(target,{method:req.method,headers:req.headers.has('Range')?{Range:req.headers.get('Range')}:undefined});const headers=new Headers(response.headers);if(/\.(?:html|js|css|json)$/.test(url.pathname)||url.pathname==='/'){headers.set('Cache-Control','no-store');headers.delete('Expires');headers.delete('Age')}return new Response(response.body,{status:response.status,statusText:response.statusText,headers});
 }};
