@@ -1,0 +1,56 @@
+[
+  {
+    "id": "auto",
+    "duration": 12,
+    "width": 720,
+    "height": 1280,
+    "bytes": 499930,
+    "motionFramesDiffer": true,
+    "posterMatchesDimensions": true
+  },
+  {
+    "id": "product",
+    "duration": 12,
+    "width": 1280,
+    "height": 720,
+    "bytes": 248171,
+    "motionFramesDiffer": true,
+    "posterMatchesDimensions": true
+  },
+  {
+    "id": "story",
+    "duration": 12,
+    "width": 720,
+    "height": 1280,
+    "bytes": 666240,
+    "motionFramesDiffer": true,
+    "posterMatchesDimensions": true
+  },
+  {
+    "id": "travel",
+    "duration": 12,
+    "width": 1280,
+    "height": 720,
+    "bytes": 456499,
+    "motionFramesDiffer": true,
+    "posterMatchesDimensions": true
+  },
+  {
+    "id": "lesson",
+    "duration": 12,
+    "width": 720,
+    "height": 1280,
+    "bytes": 362811,
+    "motionFramesDiffer": true,
+    "posterMatchesDimensions": true
+  },
+  {
+    "id": "promo",
+    "duration": 12,
+    "width": 1280,
+    "height": 720,
+    "bytes": 437853,
+    "motionFramesDiffer": true,
+    "posterMatchesDimensions": true
+  }
+]

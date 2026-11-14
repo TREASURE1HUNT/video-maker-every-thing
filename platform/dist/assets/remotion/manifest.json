@@ -1,0 +1,200 @@
+{
+  "version": 1,
+  "renderer": "Remotion 4.0.543",
+  "upstream": "https://github.com/DojoCodingLabs/remotion-superpowers",
+  "upstreamCommit": "970efd2d2f4ce2492231a31ee684c2ead883f4bc",
+  "templates": [
+    {
+      "id": "auto",
+      "name": "Авто: форма и движение",
+      "aspect": "9:16",
+      "category": "Авто",
+      "tag": "Автообзор",
+      "visual": "auto",
+      "preset": "dynamic",
+      "scenes": [
+        [
+          "Создан для движения.",
+          "Автообзор в трёх актах"
+        ],
+        [
+          "Внимание к деталям.",
+          "Линии. Свет. Характер."
+        ],
+        [
+          "Твой следующий маршрут.",
+          "Добавь свои кадры и название"
+        ]
+      ],
+      "duration": 12,
+      "fps": 30,
+      "width": 720,
+      "height": 1280,
+      "preview": "assets/remotion/auto.mp4",
+      "poster": "assets/remotion/auto.png",
+      "source": "remotion-superpowers",
+      "sceneFrames": 128,
+      "transitionFrames": 12
+    },
+    {
+      "id": "product",
+      "name": "Продукт: тихий запуск",
+      "aspect": "16:9",
+      "category": "Продукт",
+      "tag": "Презентация",
+      "visual": "product",
+      "preset": "product",
+      "scenes": [
+        [
+          "Меньше шума.",
+          "Больше твоей музыки."
+        ],
+        [
+          "Каждая деталь важна.",
+          "Форма следует ощущению."
+        ],
+        [
+          "Услышь по-новому.",
+          "Твой продукт в главной роли"
+        ]
+      ],
+      "duration": 12,
+      "fps": 30,
+      "width": 1280,
+      "height": 720,
+      "preview": "assets/remotion/product.mp4",
+      "poster": "assets/remotion/product.png",
+      "source": "remotion-superpowers",
+      "sceneFrames": 128,
+      "transitionFrames": 12
+    },
+    {
+      "id": "story",
+      "name": "История: один момент",
+      "aspect": "9:16",
+      "category": "Shorts / Reels",
+      "tag": "История",
+      "visual": "story",
+      "preset": "cinematic",
+      "scenes": [
+        [
+          "Всё начинается с момента.",
+          "Небольшая история о главном"
+        ],
+        [
+          "Посмотри внимательнее.",
+          "Замедлись. Заметь. Сохрани."
+        ],
+        [
+          "Расскажи свою историю.",
+          "Один кадр меняет всё"
+        ]
+      ],
+      "duration": 12,
+      "fps": 30,
+      "width": 720,
+      "height": 1280,
+      "preview": "assets/remotion/story.mp4",
+      "poster": "assets/remotion/story.png",
+      "source": "remotion-superpowers",
+      "sceneFrames": 128,
+      "transitionFrames": 12
+    },
+    {
+      "id": "travel",
+      "name": "Маршрут: за горизонт",
+      "aspect": "16:9",
+      "category": "Путешествия",
+      "tag": "Путешествие",
+      "visual": "travel",
+      "preset": "cinematic",
+      "scenes": [
+        [
+          "За привычным горизонтом.",
+          "Дорога начинается здесь"
+        ],
+        [
+          "Новый взгляд.",
+          "Тишина. Высота. Пространство."
+        ],
+        [
+          "Выбери свой маршрут.",
+          "Сохрани то, что почувствовал"
+        ]
+      ],
+      "duration": 12,
+      "fps": 30,
+      "width": 1280,
+      "height": 720,
+      "preview": "assets/remotion/travel.mp4",
+      "poster": "assets/remotion/travel.png",
+      "source": "remotion-superpowers",
+      "sceneFrames": 128,
+      "transitionFrames": 12
+    },
+    {
+      "id": "lesson",
+      "name": "Объясни за три шага",
+      "aspect": "9:16",
+      "category": "Обучение",
+      "tag": "Обучение",
+      "visual": "lesson",
+      "preset": "minimal",
+      "scenes": [
+        [
+          "Сложное — просто.",
+          "Одна идея за двенадцать секунд"
+        ],
+        [
+          "Раздели на три шага.",
+          "Пойми → попробуй → повтори"
+        ],
+        [
+          "Теперь твоя очередь.",
+          "Добавь свой пример и объяснение"
+        ]
+      ],
+      "duration": 12,
+      "fps": 30,
+      "width": 720,
+      "height": 1280,
+      "preview": "assets/remotion/lesson.mp4",
+      "poster": "assets/remotion/lesson.png",
+      "source": "remotion-superpowers",
+      "sceneFrames": 128,
+      "transitionFrames": 12
+    },
+    {
+      "id": "promo",
+      "name": "Анонс: новый сезон",
+      "aspect": "16:9",
+      "category": "Продажи",
+      "tag": "Анонс",
+      "visual": "promo",
+      "preset": "dynamic",
+      "scenes": [
+        [
+          "Время нового.",
+          "Коллекция твоих идей"
+        ],
+        [
+          "Смелее. Чище. Точнее.",
+          "Оставь только главное."
+        ],
+        [
+          "Твой следующий запуск.",
+          "Скоро в твоём проекте"
+        ]
+      ],
+      "duration": 12,
+      "fps": 30,
+      "width": 1280,
+      "height": 720,
+      "preview": "assets/remotion/promo.mp4",
+      "poster": "assets/remotion/promo.png",
+      "source": "remotion-superpowers",
+      "sceneFrames": 128,
+      "transitionFrames": 12
+    }
+  ]
+}

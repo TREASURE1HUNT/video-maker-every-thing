@@ -1,3 +1,4 @@
+import {aiRoutes,aiReady,resolveSkill,executeAI,validateAIResult} from './ai.mjs';
 import {account} from './account.mjs';
 import {billing,requirePaid,requireModel,planCatalog} from './billing.mjs';
 const now=()=>new Date().toISOString(), uid=()=>crypto.randomUUID();
@@ -65,7 +66,9 @@ async function gateway(req,env){
  await requirePaid(env.DB,user);const b=await body(req);await requireModel(env.DB,user,b.model);const model=await first(env.DB,'SELECT * FROM models WHERE id=? AND enabled=1',str(b.model));
  if(!model||model.provider!==b.provider)fail(403,'Модель выключена или провайдер не совпадает');
  const allowed=JSON.parse(user.models);if(!allowed.includes('*')&&!allowed.includes(model.id))fail(403,'Модель не разрешена пользователю');
- if(!env.AI_GATEWAY_URL)fail(503,'ИИ-шлюз ещё не подключён. Кредиты не списаны');
+ if(!await aiReady(env.DB,env,model))fail(503,'Провайдер ИИ ещё не подключён. Кредиты не списаны');
+ const skill=await resolveSkill(env.DB,user,b.skill_id||b.settings?.skill_id);
+ if(b.assets&&!Array.isArray(b.assets))fail(400,'Некорректный список материалов');
  if(!Array.isArray(b.messages)||b.messages.length>40||!b.messages.every(m=>['user','assistant'].includes(m.role)&&typeof m.content==='string'&&m.content.length<=14000))fail(400,'Некорректные сообщения');
  const key=str(req.headers.get('Idempotency-Key')||b.requestId,100),idem=user.id+':'+key;
  let prior=await first(env.DB,'SELECT * FROM requests WHERE idem=?',idem);
@@ -78,10 +81,7 @@ async function gateway(req,env){
  ]);
  if(!r[0].meta.changes)fail(409,'Недостаточно кредитов или повторный запрос');
  try{
-  const up=await fetch(env.AI_GATEWAY_URL,{method:'POST',headers:{'Content-Type':'application/json',...(env.AI_GATEWAY_SECRET?{Authorization:'Bearer '+env.AI_GATEWAY_SECRET}:{}),'Idempotency-Key':id},body:JSON.stringify(b),signal:AbortSignal.timeout(38000)});
-  if(!up.ok)throw new Error('upstream');
-  const text=await up.text();if(text.length>1000000)throw new Error('size');
-  const data=JSON.parse(text);if(typeof data.message!=='string')throw new Error('schema');
+  const data=validateAIResult(await executeAI(env,user,model,{...b,executionId:id},skill),b);
   await stmt(env.DB,"UPDATE requests SET status='complete',response=? WHERE id=?",JSON.stringify(data),id).run();return json(data);
  }catch{
   await env.DB.batch([
@@ -98,7 +98,7 @@ export async function api(req,env){
   if(req.method!=='GET'&&req.headers.get('Origin')&&req.headers.get('Origin')!==url.origin)fail(403,'Другой источник запроса');
   if(path==='/v1/chat'&&req.method==='POST')return await gateway(req,env);
   if(path==='/api/redeem'&&req.method==='POST'){const {user,token}=await tokenUser(req,env);if(token.scope!=='promo:redeem')fail(403,'Токен не разрешает активацию промокодов');return json(await redeem(env.DB,user,(await body(req)).code))}
-  const u=await identity(req,env),perms=permissions[u.role]||[];const accountResult=await account(req,env,u);if(accountResult)return accountResult;const customerResult=await billing(req,env,u);if(customerResult)return customerResult;
+  const u=await identity(req,env),perms=permissions[u.role]||[];const aiResult=await aiRoutes(req,env,u);if(aiResult)return aiResult;const accountResult=await account(req,env,u);if(accountResult)return accountResult;const customerResult=await billing(req,env,u);if(customerResult)return customerResult;
   if(path==='/api/me')return json({user:u,permissions:perms,gatewayConfigured:!!env.AI_GATEWAY_URL});
   if(!perms.length)fail(403,'Требуется роль администратора');
   const section=path.split('/')[3];

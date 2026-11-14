@@ -1,3 +1,4 @@
+import {aiReady} from './ai.mjs';
 import {getProfile} from './account.mjs';
 export const PLAN_DEFAULTS=[{id:'lite',price_minor:900,credits:100,enabled:1,video_limit:5,period_days:14},{id:'plus',price_minor:1900,credits:350,enabled:1,video_limit:7,period_days:7},{id:'pro',price_minor:3900,credits:1000,enabled:1,video_limit:10,period_days:7}];
 const ranks={free:0,lite:1,plus:2,pro:3};
@@ -27,7 +28,7 @@ async function activate(db,u,o){
  ]);
 }
 export async function billing(req,env,u){const url=new URL(req.url),p=url.pathname,db=env.DB;
- if(p==='/api/customer'&&req.method==='GET'){const e=await entitlement(db,u);return out({user:{id:u.id,email:u.email,name:u.name,role:u.role},profile:await getProfile(db,u),...e,models:await availableModels(db,u,e),plans:await planCatalog(db),paymentReady:!!env.NOWPAYMENTS_API_KEY,aiReady:!!env.AI_GATEWAY_URL})}
+ if(p==='/api/customer'&&req.method==='GET'){const e=await entitlement(db,u);return out({user:{id:u.id,email:u.email,name:u.name,role:u.role},profile:await getProfile(db,u),...e,models:await Promise.all((await availableModels(db,u,e)).map(async m=>({...m,available:m.available&&await aiReady(db,env,m)}))),plans:await planCatalog(db),paymentReady:!!env.NOWPAYMENTS_API_KEY,aiReady:!!env.AI_GATEWAY_URL})}
  if(p==='/api/projects'&&req.method==='POST'){const b=await payload(req);if(typeof b.name!=='string'||!b.name.trim()||b.name.length>70)fail(400,'Нужно название проекта');const e=await requireModel(db,u,b.model_id||'local'),cutoff=new Date(Date.now()-e.periodDays*86400000).toISOString(),projectId=id();const result=await db.batch([st(db,"INSERT INTO cloud_projects SELECT ?,id,?,?,? FROM users WHERE id=? AND status='active' AND (SELECT count(*) FROM cloud_projects WHERE user_id=? AND created_at>?)<? AND EXISTS(SELECT 1 FROM subscriptions WHERE user_id=? AND starts_at<=? AND ends_at>?)",projectId,b.name,b.model_id||'local',now(),u.id,u.id,cutoff,e.videoLimit,u.id,now(),now()),st(db,"INSERT INTO audit SELECT ?,?,'project.create',id,'{}',? FROM cloud_projects WHERE id=?",id(),u.email,now(),projectId)]);if(!result[0].meta.changes)fail(429,'Лимит видео на текущий период исчерпан');return out({projectId})}
  if(p==='/api/billing/checkout'&&req.method==='POST'){
   const b=await payload(req),plan=(await planCatalog(db)).find(x=>x.id===b.plan&&x.enabled);if(!plan||plan.price_minor<100)fail(400,'Тариф не продаётся');
