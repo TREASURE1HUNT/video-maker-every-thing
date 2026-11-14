@@ -8,6 +8,13 @@
       "when": 1794603502194,
       "tag": "0000_magical_wendell_rand",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1794669004694,
+      "tag": "0001_clean_hobgoblin",
+      "breakpoints": true
     }
   ]
 }

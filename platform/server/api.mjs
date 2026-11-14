@@ -1,3 +1,4 @@
+import {billing,requirePaid,requireModel,planCatalog} from './billing.mjs';
 const now=()=>new Date().toISOString(), uid=()=>crypto.randomUUID();
 const fail=(status,message)=>{throw Object.assign(new Error(message),{status})};
 const json=(data,status=200)=>Response.json(data,{status,headers:{'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
@@ -11,7 +12,7 @@ const stmt=(db,sql,...args)=>db.prepare(sql).bind(...args);
 const all=async(db,sql,...args)=>(await stmt(db,sql,...args).all()).results;
 const first=(db,sql,...args)=>stmt(db,sql,...args).first();
 const audit=(db,actor,action,entity,details={})=>stmt(db,'INSERT INTO audit VALUES(?,?,?,?,?,?)',uid(),actor,action,entity,JSON.stringify(details),now());
-const permissions={owner:['users','models','credits','tokens','promos','campaigns','audit'],admin:['users','models','credits','tokens','promos','campaigns','audit'],finance:['credits','promos','campaigns','audit'],support:['tokens','audit'],user:[]};
+const permissions={owner:['users','models','credits','tokens','promos','campaigns','audit','billing'],admin:['users','models','credits','tokens','promos','campaigns','audit','billing'],finance:['credits','promos','campaigns','audit','billing'],support:['tokens','audit'],user:[]};
 async function identity(req,env){
  const email=req.headers.get('oai-authenticated-user-email')?.toLowerCase();
  // Only trusted Sites ingress supplies identity; do not put this Worker behind an untrusted proxy.
@@ -21,6 +22,7 @@ async function identity(req,env){
   await stmt(env.DB,"INSERT OR IGNORE INTO users VALUES(?,?,?,'owner','active','team',0,'[\"*\"]',?)",uid(),email,'Владелец',now()).run();
   user=await first(env.DB,'SELECT * FROM users WHERE email=?',email);
  }
+ if(!user){await stmt(env.DB,"INSERT OR IGNORE INTO users VALUES(?,?,?,'user','active','free',0,'[\"*\"]',?)",uid(),email,email.split('@')[0],now()).run();user=await first(env.DB,'SELECT * FROM users WHERE email=?',email)}
  if(!user||user.status!=='active')fail(403,'Доступ не выдан или приостановлен');
  return user;
 }
@@ -58,8 +60,8 @@ async function redeem(db,user,code){
  return {credits:p.credits};
 }
 async function gateway(req,env){
- const {user,token}=await tokenUser(req,env);if(token.scope!=='ai:chat')fail(403,'Токен не разрешает запросы ИИ');
- const b=await body(req), model=await first(env.DB,'SELECT * FROM models WHERE id=? AND enabled=1',str(b.model));
+ const {user,token}=req.headers.has('Authorization')?await tokenUser(req,env):{user:await identity(req,env),token:null};if(token&&token.scope!=='ai:chat')fail(403,'Токен не разрешает запросы ИИ');
+ await requirePaid(env.DB,user);const b=await body(req);await requireModel(env.DB,user,b.model);const model=await first(env.DB,'SELECT * FROM models WHERE id=? AND enabled=1',str(b.model));
  if(!model||model.provider!==b.provider)fail(403,'Модель выключена или провайдер не совпадает');
  const allowed=JSON.parse(user.models);if(!allowed.includes('*')&&!allowed.includes(model.id))fail(403,'Модель не разрешена пользователю');
  if(!env.AI_GATEWAY_URL)fail(503,'ИИ-шлюз ещё не подключён. Кредиты не списаны');
@@ -95,7 +97,7 @@ export async function api(req,env){
   if(req.method!=='GET'&&req.headers.get('Origin')&&req.headers.get('Origin')!==url.origin)fail(403,'Другой источник запроса');
   if(path==='/v1/chat'&&req.method==='POST')return await gateway(req,env);
   if(path==='/api/redeem'&&req.method==='POST'){const {user,token}=await tokenUser(req,env);if(token.scope!=='promo:redeem')fail(403,'Токен не разрешает активацию промокодов');return json(await redeem(env.DB,user,(await body(req)).code))}
-  const u=await identity(req,env),perms=permissions[u.role]||[];
+  const u=await identity(req,env),perms=permissions[u.role]||[];const customerResult=await billing(req,env,u);if(customerResult)return customerResult;
   if(path==='/api/me')return json({user:u,permissions:perms,gatewayConfigured:!!env.AI_GATEWAY_URL});
   if(!perms.length)fail(403,'Требуется роль администратора');
   const section=path.split('/')[3];
@@ -103,10 +105,10 @@ export async function api(req,env){
    const tables={};
    // Read visibility follows the same domain permissions as writes.
    const names=new Set(['users',...perms]);if(perms.includes('credits'))names.add('ledger');
-   for(const name of names){if(name==='credits')continue;
+   for(const name of names){if(name==='credits'||name==='billing')continue;
     tables[name]=await all(env.DB,name==='tokens'?'SELECT t.id,t.user_id,t.name,t.prefix,t.scope,t.expires_at,t.revoked,t.created_at,t.last_used,u.email FROM tokens t JOIN users u ON u.id=t.user_id ORDER BY t.created_at DESC LIMIT 500':name==='users'&&u.role!=='owner'&&u.role!=='admin'?'SELECT id,email,name,status,plan,credits FROM users ORDER BY created_at DESC LIMIT 500':`SELECT * FROM ${name} ORDER BY rowid DESC LIMIT 500`);
    }
-   return json({tables,permissions:perms,user:u,gatewayConfigured:!!env.AI_GATEWAY_URL,limit:500});
+   if(perms.includes('billing')){tables.plans=await planCatalog(env.DB);tables.subscriptions=await all(env.DB,'SELECT * FROM subscriptions');tables.orders=await all(env.DB,'SELECT * FROM orders ORDER BY created_at DESC LIMIT 100')}return json({tables,permissions:perms,user:u,gatewayConfigured:!!env.AI_GATEWAY_URL,paymentConfigured:!!env.NOWPAYMENTS_API_KEY,limit:500});
   }
   if(!perms.includes(section))fail(403,'Эта операция не разрешена вашей роли');
   if(req.method!=='POST')fail(405,'Ожидается POST');
@@ -118,10 +120,10 @@ export async function api(req,env){
    if(existing?.role==='owner'||(email===env.ADMIN_EMAIL?.toLowerCase()))fail(403,'Владелец защищён от изменений');
    if(u.role!=='owner'&&(role==='admin'||existing?.role==='admin'))fail(403,'Только владелец управляет администраторами');
    const access=Array.isArray(b.models)&&b.models.length<100&&b.models.every(x=>typeof x==='string'&&x.length<100)?b.models:fail(400,'Некорректный список моделей');
-   await db.batch([stmt(db,`INSERT INTO users VALUES(?,?,?,?,?,?,0,?,?) ON CONFLICT(id) DO UPDATE SET email=excluded.email,name=excluded.name,role=excluded.role,status=excluded.status,plan=excluded.plan,models=excluded.models`,id,email,str(b.name),role,choice(b.status,['active','suspended']),choice(b.plan,['free','pro','team']),JSON.stringify(access),now()),audit(db,actor,'users.save',id,{email,role,status:b.status})]);
+   await db.batch([stmt(db,`INSERT INTO users VALUES(?,?,?,?,?,?,0,?,?) ON CONFLICT(id) DO UPDATE SET email=excluded.email,name=excluded.name,role=excluded.role,status=excluded.status,plan=excluded.plan,models=excluded.models`,id,email,str(b.name),role,choice(b.status,['active','suspended']),choice(b.plan,['free','lite','plus','pro']),JSON.stringify(access),now()),audit(db,actor,'users.save',id,{email,role,status:b.status})]);
   }else if(section==='models'){
    if(!/^[a-zA-Z0-9._:/-]{1,100}$/.test(id))fail(400,'Недопустимый ID модели');
-   await db.batch([stmt(db,'INSERT INTO models VALUES(?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET provider=excluded.provider,name=excluded.name,enabled=excluded.enabled,cost=excluded.cost,description=excluded.description',id,choice(b.provider,['openai','anthropic','google','custom']),str(b.name),b.enabled?1:0,num(b.cost,0,10000),String(b.description||'').slice(0,500)),audit(db,actor,'models.save',id,{enabled:!!b.enabled,cost:b.cost})]);
+   await db.batch([stmt(db,'INSERT INTO models VALUES(?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET provider=excluded.provider,name=excluded.name,enabled=excluded.enabled,cost=excluded.cost,description=excluded.description,min_plan=excluded.min_plan',id,choice(b.provider,['openai','anthropic','google','custom']),str(b.name),b.enabled?1:0,num(b.cost,0,10000),String(b.description||'').slice(0,500),choice(b.min_plan||'lite',['lite','plus','pro'])),audit(db,actor,'models.save',id,{enabled:!!b.enabled,cost:b.cost})]);
   }else if(section==='credits'){
    await adjust(db,str(b.user_id),num(b.amount,-1000000,1000000),str(b.reason,500),actor);
   }else if(section==='tokens'){
@@ -138,10 +140,10 @@ export async function api(req,env){
    // Existing redemptions must remain immutable; editing a used promotion only toggles its availability.
    if(existing&&await first(db,'SELECT id FROM redemptions WHERE promo_id=? LIMIT 1',id)){
     await db.batch([stmt(db,'UPDATE promos SET active=? WHERE id=?',b.active?1:0,id),audit(db,actor,'promos.toggle',id,{active:!!b.active})]);
-   }else await db.batch([stmt(db,'INSERT INTO promos VALUES(?,?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET code=excluded.code,credits=excluded.credits,max_uses=excluded.max_uses,starts_at=excluded.starts_at,ends_at=excluded.ends_at,active=excluded.active,plan=excluded.plan',id,code,num(b.credits,1),num(b.max_uses,1),start,end,b.active?1:0,choice(b.plan,['*','free','pro','team'])),audit(db,actor,'promos.save',id,{code})]);
+   }else await db.batch([stmt(db,'INSERT INTO promos VALUES(?,?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET code=excluded.code,credits=excluded.credits,max_uses=excluded.max_uses,starts_at=excluded.starts_at,ends_at=excluded.ends_at,active=excluded.active,plan=excluded.plan',id,code,num(b.credits,1),num(b.max_uses,1),start,end,b.active?1:0,choice(b.plan,['*','free','lite','plus','pro'])),audit(db,actor,'promos.save',id,{code})]);
   }else if(section==='campaigns'){
    const start=date(b.starts_at),end=date(b.ends_at);if(start>=end)fail(400,'Дата окончания должна быть позже начала');
-   await db.batch([stmt(db,'INSERT INTO campaigns VALUES(?,?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET name=excluded.name,description=excluded.description,starts_at=excluded.starts_at,ends_at=excluded.ends_at,active=excluded.active,audience=excluded.audience,promo_code=excluded.promo_code',id,str(b.name),str(b.description,1000),start,end,b.active?1:0,choice(b.audience,['all','free','pro','team']),String(b.promo_code||'').slice(0,32)),audit(db,actor,'campaigns.save',id)]);
+   await db.batch([stmt(db,'INSERT INTO campaigns VALUES(?,?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET name=excluded.name,description=excluded.description,starts_at=excluded.starts_at,ends_at=excluded.ends_at,active=excluded.active,audience=excluded.audience,promo_code=excluded.promo_code',id,str(b.name),str(b.description,1000),start,end,b.active?1:0,choice(b.audience,['all','free','lite','plus','pro']),String(b.promo_code||'').slice(0,32)),audit(db,actor,'campaigns.save',id)]);
   }else fail(404,'Маршрут не найден');
   return json({ok:true,id});
  }catch(e){if(!e.status)console.error('ADMIN_API_ERROR',e.message);return json({error:e.status?e.message:'Ошибка базы данных. Проверьте уникальность email, кода и идентификаторов.'},e.status||500)}
