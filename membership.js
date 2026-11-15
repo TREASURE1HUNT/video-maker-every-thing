@@ -1,5 +1,5 @@
 import {setStorageScope} from './project-store.js';
-export const APP_ORIGIN='https://video-maker-every-thing.izhanshahfarul.chatgpt.site';
+export const APP_ORIGIN=typeof location!=='undefined'&&!location.hostname.endsWith('github.io')?location.origin:'https://video-maker-every-thing.izhanshahfarul.chatgpt.site';
 export const STARTER_PLANS=[{id:'lite',price_minor:79000,credits:100,enabled:1,video_limit:5,period_days:14},{id:'plus',price_minor:169000,credits:350,enabled:1,video_limit:7,period_days:7},{id:'pro',price_minor:349000,credits:1000,enabled:1,video_limit:10,period_days:7}];
 let current={plan:'free',canCreate:false,endsAt:null,models:[],plans:STARTER_PLANS,paymentReady:false,authenticated:false};
 export async function customer(path,data){const r=await fetch(path,{method:data?'POST':'GET',credentials:'same-origin',headers:{'Content-Type':'application/json'},...(data?{body:JSON.stringify(data)}:{})});const type=r.headers.get('Content-Type')||'';if(!type.includes('json'))throw new Error('Откройте основной сайт и войдите в аккаунт');const j=await r.json();if(!r.ok)throw Object.assign(new Error(j.error||'Ошибка сервера'),{status:r.status});return j}

@@ -1,6 +1,7 @@
 import {customer,APP_ORIGIN,membership} from './membership.js';
 const el=(t,c,text)=>{const n=document.createElement(t);if(c)n.className=c;if(text!==undefined)n.textContent=text;return n};
 export function emailLogin(panel){
+ customer('/api/telegram/info').then(t=>{if(t.enabled&&/^[a-zA-Z0-9_]{5,32}$/.test(t.username)){const a=el('a','ws-outline','Открыть Telegram-бота');a.href='https://t.me/'+t.username;a.target='_blank';a.rel='noopener';panel.append(a)}}).catch(()=>{});
  const origin=location.hostname.endsWith('github.io')?APP_ORIGIN:location.origin;
  if(location.hostname.endsWith('github.io')){const a=el('a','ws-primary','Открыть вход');a.href=APP_ORIGIN+'/login.html';panel.append(a);return}
  const title=el('h2','','Вход по коду'),lead=el('p','','Проверяем доступные способы входа…'),form=el('form','email-login-form'),status=el('p','auth-message');status.role='status';status.id='auth-message';

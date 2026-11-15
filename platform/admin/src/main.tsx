@@ -1,3 +1,4 @@
+import {TelegramAdmin} from './TelegramAdmin';
 import {AuthSettings} from './AuthSettings';
 import {AiAdmin} from './AiAdmin';
 import {PaymentSettings} from './PaymentSettings';
@@ -42,7 +43,7 @@ function App(){
  {!state&&!error&&<Card className="loading">Загружаем данные…</Card>}
  {state&&!allowed(page)&&<Card className="loading">У вашей роли нет доступа к этому разделу.</Card>}
  {state&&allowed(page)&&<>
- {page==='auth'&&<AuthSettings/>}
+ {page==='auth'&&<><TelegramAdmin/><AuthSettings/></>}
  {page==='ai'&&<AiAdmin/>}
  {page==='overview'&&<><div className="metrics">{[[Users,'Пользователи',fmt(users.length),`${active} активных аккаунтов`],[Coins,'Кредиты на счетах',fmt(total),'Суммарный баланс пользователей'],[Bot,'Доступные модели',`${models.filter((m:any)=>m.enabled).length} / ${models.length}`,'Разрешены администратором'],[Ticket,'Промокоды',fmt(promos.filter((p:any)=>p.active&&p.starts_at<=new Date().toISOString()&&p.ends_at>new Date().toISOString()).length),'Действуют прямо сейчас']].map(([Icon,label,val,hint]:any)=><Card className="metric" key={label}><div className="metric-top">{label}<Icon size={18}/></div><div className="metric-value">{val}</div><p>{hint}</p></Card>)}</div>
  <div className="overview-grid"><Card className="activity-card"><div className="card-heading"><div><h2>Движение кредитов</h2><p>Начисления и списания за последние 7 дней</p></div><span className="period">7 дней</span></div><div className="chart">{Array.from({length:7},(_,i)=>{const d=new Date();d.setDate(d.getDate()-6+i);const key=d.toISOString().slice(0,10),ls=ledger.filter((l:any)=>l.created_at.startsWith(key)),plus=ls.reduce((n:number,l:any)=>n+Math.max(0,l.amount),0),minus=ls.reduce((n:number,l:any)=>n+Math.max(0,-l.amount),0);const max=Math.max(1,...ledger.map((l:any)=>Math.abs(l.amount)));return <div className="chart-day" key={i} title={`Начислено ${plus}, списано ${minus}`}><div className="bars"><i style={{height:Math.max(2,Math.min(100,plus/max*100))+'%'}}/><i className="minus" style={{height:Math.max(2,Math.min(100,minus/max*100))+'%'}}/></div><span>{d.toLocaleDateString('ru',{day:'numeric',month:'short'})}</span></div>})}</div><div className="legend"><span><i/>Начисления</span><span><i/>Списания</span>{!ledger.length&&<small>График появится после первой операции</small>}</div></Card>

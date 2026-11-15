@@ -17,7 +17,7 @@ const equal=(a,b)=>{let x=a.length^b.length;for(let i=0;i<Math.max(a.length,b.le
 async function sendMail(env,c,to,subject,text,id){if(!c.mail_enabled||!c.mail_secret||!c.mail_from)fail(503,'Вход по коду ещё не подключён. Владелец должен настроить отправку писем в админке');const key=await unseal(c.mail_secret,env,'auth:mail');let r;try{r=await fetch('https://api.resend.com/emails',{method:'POST',headers:{Authorization:'Bearer '+key,'Content-Type':'application/json','Idempotency-Key':id},body:JSON.stringify({from:c.mail_from,to:[to],subject,text}),redirect:'manual',signal:AbortSignal.timeout(12000)});if(!r.ok)throw Error('provider');const data=await r.json();if(!data.id)throw Error('schema');return data.id}catch{fail(502,'Почтовый сервис не подтвердил отправку. Проверьте ключ и подтверждённый адрес отправителя')}}
 export async function sessionUser(req,env){const raw=readCookie(req,sessionCookie);if(!/^[a-f0-9]{64}$/.test(raw)||!env.DB)return null;return one(env.DB,'SELECT u.*,s.method AS auth_method FROM users u JOIN auth_sessions s ON s.user_id=u.id WHERE s.id=? AND s.expires_at>?',await hash(raw),now())}
 async function currentUser(req,env){const local=await sessionUser(req,env);if(local)return local;const mail=req.headers.get('oai-authenticated-user-email')?.toLowerCase();return mail?one(env.DB,'SELECT * FROM users WHERE email=?',mail):null}
-async function finishSession(env,user,method){if(!user||user.status!=='active')fail(403,'Аккаунт приостановлен');const raw=token();await st(env.DB,'INSERT INTO auth_sessions VALUES(?,?,?,?,?)',await hash(raw),user.id,method,now(),after(7*86400000)).run();return raw}
+export async function finishSession(env,user,method){if(!user||user.status!=='active')fail(403,'Аккаунт приостановлен');const raw=token();await st(env.DB,'INSERT INTO auth_sessions VALUES(?,?,?,?,?)',await hash(raw),user.id,method,now(),after(7*86400000)).run();return raw}
 const redirect=(url,headers={})=>new Response(null,{status:302,headers:{Location:url,'Cache-Control':'no-store',...headers}});
 export async function publicAuth(req,env){const url=new URL(req.url),p=url.pathname,db=env.DB;if(!p.startsWith('/api/auth/'))return null;
  if(req.method!=='GET'&&req.headers.get('Origin')&&req.headers.get('Origin')!==url.origin)fail(403,'Другой источник запроса');
@@ -71,3 +71,5 @@ export async function adminAuth(req,env,u){const p=new URL(req.url).pathname;if(
 }
 const dbBatch=(db,list)=>db.batch(list);
 
+
+export const sessionHeaders=raw=>({'Set-Cookie':cookie(sessionCookie,raw,7*86400)});
