@@ -8,7 +8,7 @@ const loginURL=()=>APP_ORIGIN+'/signin-with-chatgpt?return_to='+encodeURICompone
 const download=(data,name)=>{const url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'})),a=link('',url);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)};
 function title(root,h,p){root.append(el('h1','',h),el('p','account-lead',p))}
 export function loginScreen(root){
- const frame=el('section','login-layout'),copy=el('div','login-copy');copy.append(el('h1','','Твои проекты. Твой аккаунт.'),el('p','','Войди по коду на почту, через Яндекс ID или ChatGPT. Подписка и проекты привязываются к аккаунту.'));
+ const frame=el('section','login-layout'),copy=el('div','login-copy');copy.append(el('h1','','Твои проекты. Твой аккаунт.'),el('p','','Выбери доступный способ входа. Подписка и проекты привязываются к аккаунту.'));
  const panel=el('section','login-panel');emailLogin(panel);
  const info=el('details','data-disclosure');info.append(el('summary','','Что сохраняется'),el('p','','Сервер хранит email входа, имя, подписку, лимиты и историю операций. Исходники и монтажные проекты остаются в браузере на текущем домене. При переходе на другой домен библиотека автоматически не переносится.'));
  panel.append(info);frame.append(copy,panel);root.append(frame);legacyRecovery(root);

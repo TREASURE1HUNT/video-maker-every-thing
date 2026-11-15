@@ -1,0 +1,50 @@
+[
+  {
+    "id": "auto",
+    "duration": 12,
+    "width": 1280,
+    "height": 720,
+    "frames": 360,
+    "bytes": 1411525
+  },
+  {
+    "id": "product",
+    "duration": 12,
+    "width": 1280,
+    "height": 720,
+    "frames": 360,
+    "bytes": 1694444
+  },
+  {
+    "id": "story",
+    "duration": 12,
+    "width": 720,
+    "height": 1280,
+    "frames": 360,
+    "bytes": 1458904
+  },
+  {
+    "id": "travel",
+    "duration": 12,
+    "width": 1280,
+    "height": 720,
+    "frames": 360,
+    "bytes": 2608864
+  },
+  {
+    "id": "lesson",
+    "duration": 12,
+    "width": 720,
+    "height": 1280,
+    "frames": 360,
+    "bytes": 2062374
+  },
+  {
+    "id": "promo",
+    "duration": 12,
+    "width": 1280,
+    "height": 720,
+    "frames": 360,
+    "bytes": 1399530
+  }
+]
