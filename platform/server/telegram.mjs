@@ -19,7 +19,7 @@ export async function validateTelegramInitData(raw,token,seconds=Date.now()/1000
  if(!Number.isSafeInteger(u?.id)||u.id<=0)fail(401,'Некорректный профиль Telegram');
  return {id:String(u.id),name:String(u.first_name||'Пользователь').slice(0,70),proof:supplied};
 }
-const cfg=async e=>await one(e,'SELECT * FROM telegram_config WHERE id=?','main')||{enabled:0,bot_secret:'',username:'',app_url:'',welcome:'Создавайте видео, обложки и субтитры в VMET. Откройте студию ниже.'};
+const cfg=async e=>await one(e,'SELECT * FROM telegram_config WHERE id=?','main')||{enabled:e.TELEGRAM_ENABLED==='1'&&!!e.TELEGRAM_BOT_TOKEN&&!!e.TELEGRAM_APP_URL?1:0,bot_secret:'',username:e.TELEGRAM_BOT_USERNAME||'',app_url:e.TELEGRAM_APP_URL||'',welcome:'Создавайте видео, обложки и субтитры в VMET. Откройте студию ниже.'};
 const botToken=async(e,c)=>c.bot_secret?unseal(c.bot_secret,e,'telegram:bot'):e.TELEGRAM_BOT_TOKEN||'';
 async function bot(e,c,method,data={}){const token=await botToken(e,c);if(!token)fail(503,'Добавьте токен бота');let r;try{r=await fetch('https://api.telegram.org/bot'+token+'/'+method,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data),signal:AbortSignal.timeout(12000)});const d=await r.json();if(!r.ok||!d.ok)throw Error();return d.result}catch{fail(502,'Telegram не подтвердил запрос. Проверьте токен и подключение')}}
 async function body(req){const s=await req.text();if(s.length>64000)fail(413,'Запрос слишком большой');try{return JSON.parse(s)}catch{fail(400,'Ожидается JSON')}}
