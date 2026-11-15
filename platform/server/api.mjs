@@ -1,7 +1,7 @@
 import {enhancementRoutes} from './enhancement.mjs';
 import {voiceAdmin,speechRoutes} from './speech.mjs';
 import {publicAuth,adminAuth,sessionUser} from './auth.mjs';
-import {aiRoutes,aiReady,resolveSkill,executeAI,validateAIResult} from './ai.mjs';
+import {aiRoutes,aiReady,resolveSkill,executeAI,validateAIResult,aiFailure} from './ai.mjs';
 import {account} from './account.mjs';
 import {paymentAdmin,paymentKey,billing,requirePaid,requireModel,planCatalog} from './billing.mjs';
 const now=()=>new Date().toISOString(), uid=()=>crypto.randomUUID();
@@ -87,12 +87,12 @@ async function gateway(req,env){
  try{
   const data=validateAIResult(await executeAI(env,user,model,{...b,executionId:id},skill),b);
   await stmt(env.DB,"UPDATE requests SET status='complete',response=? WHERE id=?",JSON.stringify(data),id).run();return json(data);
- }catch{
+ }catch(error){
   await env.DB.batch([
    stmt(env.DB,"INSERT OR IGNORE INTO ledger SELECT ? ,user_id,cost,'Возврат: ошибка ИИ',?,? FROM requests WHERE id=? AND status='reserved'",id+':refund',user.email,now(),id),
    stmt(env.DB,"UPDATE users SET credits=credits+? WHERE id=? AND EXISTS(SELECT 1 FROM requests WHERE id=? AND status='reserved')",model.cost,user.id,id),
    stmt(env.DB,"UPDATE requests SET status='failed' WHERE id=? AND status='reserved'",id)
-  ]);fail(502,'ИИ-шлюз не ответил корректно. Кредиты возвращены');
+  ]);const failure=aiFailure(error);console.error('AI_REQUEST_FAILED',{requestId:id,model:model.id,status:error?.upstreamStatus||null,code:failure.code});fail(502,failure.message+' Кредиты возвращены. Код: '+failure.code);
  }
 }
 export async function api(req,env){
