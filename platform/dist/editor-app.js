@@ -1,3 +1,4 @@
+import {mountEnhancement} from './enhancement-ui.js';
 import {mountEditorControls} from './editor-controls-ui.js';
 import {drawCaption,captionStyle,coverSettings,validateCues} from './editor-controls-core.js';
 import {mountVoiceControls,createSpeech} from './speech-ui.js';
@@ -93,6 +94,7 @@ $$('.dialog-close').forEach(b=>b.onclick=()=>b.closest('dialog').close());$('#ex
 $('#import-project').onclick=()=>$('#project-input').click();$('#project-input').onchange=async e=>{if(!creationAllowed())return;const f=e.target.files[0];if(!f)return;try{if(f.size>2000000)throw new Error('Проект слишком большой.');const imported=JSON.parse(await f.text());if(imported.version!==1||!Array.isArray(imported.clips))throw new Error('Неизвестный формат проекта.');const manifest=imported.assetManifest||[];for(const c of imported.clips){if(!assetBy(c.assetId)){const old=manifest.find(a=>a.id===c.assetId),found=assets.find(a=>a.name===old?.name);if(found)c.assetId=found.id}}const n=normalizeState({...imported,projectId:state.projectId,revision:state.revision}),missing=imported.clips.length-n.clips.length;commit(()=>{state=n;time=0;activeAsset=null});toast(missing?`Проект открыт. Не найдено материалов: ${missing}. Импортируй исходные файлы и открой JSON ещё раз.`:'Проект открыт.')}catch(err){toast(err.message)}e.target.value=''};
 document.addEventListener('keydown',e=>{if(['INPUT','TEXTAREA','SELECT'].includes(document.activeElement?.tagName)||document.querySelector('dialog[open]'))return;if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'){e.preventDefault();e.shiftKey?redo():undo()}if(e.code==='Space'){e.preventDefault();if(!exporting)playing?pause():play()}});document.addEventListener('visibilitychange',()=>{if(document.hidden&&playing&&!exporting)pause()});
 function requestCost(){const m=membership().models?.find(m=>m.id===state.model);return state.provider==='local'?'Локальный план: без списания кредитов':m?`Запрос: ${m.cost} кредитов · Баланс: ${membership().credits??0}. При ошибке — возврат.`:'Выберите доступную модель.'}
+mountEnhancement({getAssets:()=>assets,selectedAsset:()=>assetBy(selected()?.assetId),importFiles,toast,refreshBilling:async()=>{await loadMembership();renderChat()}});
 const editorControls=mountEditorControls({getState:()=>state,commit,total,seek,getTime:()=>time,canvas,assetBy,clipAt,download,toast,pause,creationAllowed,requestCost});
 init();
 

@@ -64,6 +64,13 @@
       "when": 1794798000000,
       "tag": "0008_credit_prices",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "6",
+      "when": 1794801000000,
+      "tag": "0009_enhancement",
+      "breakpoints": true
     }
   ]
 }

@@ -1,3 +1,4 @@
+import {enhancementRoutes} from './enhancement.mjs';
 import {voiceAdmin,speechRoutes} from './speech.mjs';
 import {publicAuth,adminAuth,sessionUser} from './auth.mjs';
 import {aiRoutes,aiReady,resolveSkill,executeAI,validateAIResult} from './ai.mjs';
@@ -102,7 +103,7 @@ export async function api(req,env){
   if(req.method!=='GET'&&req.headers.get('Origin')&&req.headers.get('Origin')!==url.origin)fail(403,'Другой источник запроса');
   if(path==='/v1/chat'&&req.method==='POST')return await gateway(req,env);
   if(path==='/api/redeem'&&req.method==='POST'){const {user,token}=await tokenUser(req,env);if(token.scope!=='promo:redeem')fail(403,'Токен не разрешает активацию промокодов');return json(await redeem(env.DB,user,(await body(req)).code))}
-  const u=await identity(req,env),perms=permissions[u.role]||[];const paymentResult=await paymentAdmin(req,env,u);if(paymentResult)return paymentResult;const authAdminResult=await adminAuth(req,env,u);if(authAdminResult)return authAdminResult;const voiceAdminResult=await voiceAdmin(req,env,u);if(voiceAdminResult)return voiceAdminResult;const speechResult=await speechRoutes(req,env,u);if(speechResult)return speechResult;const aiResult=await aiRoutes(req,env,u);if(aiResult)return aiResult;const accountResult=await account(req,env,u);if(accountResult)return accountResult;const customerResult=await billing(req,env,u);if(customerResult)return customerResult;
+  const u=await identity(req,env),perms=permissions[u.role]||[];const enhanced=await enhancementRoutes(req,env,u);if(enhanced)return enhanced;const paymentResult=await paymentAdmin(req,env,u);if(paymentResult)return paymentResult;const authAdminResult=await adminAuth(req,env,u);if(authAdminResult)return authAdminResult;const voiceAdminResult=await voiceAdmin(req,env,u);if(voiceAdminResult)return voiceAdminResult;const speechResult=await speechRoutes(req,env,u);if(speechResult)return speechResult;const aiResult=await aiRoutes(req,env,u);if(aiResult)return aiResult;const accountResult=await account(req,env,u);if(accountResult)return accountResult;const customerResult=await billing(req,env,u);if(customerResult)return customerResult;
   if(path==='/api/me')return json({user:u,permissions:perms,gatewayConfigured:!!env.AI_GATEWAY_URL||!!env.OPENROUTER_API_KEY});
   if(!perms.length)fail(403,'Требуется роль администратора');
   const section=path.split('/')[3];
