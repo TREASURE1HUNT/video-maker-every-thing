@@ -10,3 +10,6 @@ Hallmark 2.0.0, full redesign. Modern-minimal app screens, Console-derived monoc
 - Signature: an actual project composition/timeline, not fabricated dashboard metrics. Home leads with the project brief and model selection. Profile leads with editable identity; subscription with quota and real invoices.
 - Server facts win: no account without SSO, no paid access without active subscription, no payment success from redirect. Read-only preview is distinct from creation.
 - Local media/projects are browser- and origin-scoped. Account export excludes API secrets. Clearing local storage requires typed confirmation and does not remove billing history.
+
+## Taste Skill polish, 2026-11-15
+Taste Skill 2.5.1 is now the shared UI layer. Client monochrome preserved; local Golos Text for Cyrillic, 44px actions, 8px controls, 14px panels, fixed optical SVG20. Landing uses a real licensed car montage, not a static UI screenshot; app/admin retain dense task layouts rather than marketing screen-height sections. No fake figures, users or API success states. Native paused video, logo-first loading with retry, reduced motion.

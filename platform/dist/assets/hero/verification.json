@@ -1,0 +1,12 @@
+{
+  "duration": 12,
+  "width": 1280,
+  "height": 720,
+  "fps": 30,
+  "codec": "h264",
+  "bytes": 1868665,
+  "scenes": 3,
+  "silent": true,
+  "pixelFormat": "yuv420p",
+  "colorRange": "tv"
+}

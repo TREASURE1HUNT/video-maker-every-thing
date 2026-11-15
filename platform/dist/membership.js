@@ -10,6 +10,6 @@ export function paywall(){location.href='pricing.html';}
 export async function registerProject(name,model='local'){await loadMembership();if(!canCreate()){paywall();throw new Error('Для создания нужна подписка Lite, Plus или Pro')}return customer('/api/projects',{name,model_id:model})}
 export function modelOptions(select,selected='local'){
  select.replaceChildren();const local=document.createElement('option');local.value='local';local.textContent='Локальный планировщик · Lite+';select.append(local);
- for(const m of current.models||[]){const o=document.createElement('option');o.value=m.id;o.textContent=m.name+' · '+m.min_plan+' · '+m.cost+' кр.'+(m.available?'':' · недоступно');o.disabled=!m.available;select.append(o)}
+ for(const m of current.models||[]){const o=document.createElement('option');o.value=m.id;o.textContent=m.name+' · '+m.min_plan+' · '+m.cost+' кр.'+(m.available?'':' — '+(m.reason||'недоступно'));o.disabled=!m.available;select.append(o)}
  select.value=[...select.options].some(o=>o.value===selected&&!o.disabled)?selected:'local';
 }

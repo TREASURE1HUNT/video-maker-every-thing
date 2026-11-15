@@ -5,7 +5,7 @@ import {readFile,writeFile,mkdir,readdir,cp} from 'node:fs/promises';
 import path from 'node:path';
 await build();
 const assets={};
-async function scan(dir){for(const e of await readdir(dir,{withFileTypes:true})){const p=path.join(dir,e.name);if(e.isDirectory())await scan(p);else{const key='/admin/'+path.relative('admin/build',p).replaceAll('\\','/');assets[key]={body:(await readFile(p)).toString('base64'),type:p.endsWith('.js')?'text/javascript':p.endsWith('.css')?'text/css':'text/html; charset=utf-8'};}}}
+async function scan(dir){for(const e of await readdir(dir,{withFileTypes:true})){const p=path.join(dir,e.name);if(e.isDirectory())await scan(p);else{const key='/admin/'+path.relative('admin/build',p).replaceAll('\\','/');assets[key]={body:(await readFile(p)).toString('base64'),type:p.endsWith('.js')?'text/javascript':p.endsWith('.css')?'text/css':p.endsWith('.ttf')?'font/ttf':p.endsWith('.woff2')?'font/woff2':'text/html; charset=utf-8'};}}}
 await scan('admin/build');
 await writeFile('server/assets.generated.mjs','export default '+JSON.stringify(assets));
 await mkdir('dist/server',{recursive:true});
