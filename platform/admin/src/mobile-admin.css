@@ -1,0 +1,57 @@
+/* Touch-sized controls, contained data tables, and a real small-screen drawer. */
+.mobile-admin-close{display:none}
+@media(max-width:959px){
+ .shell>.sidebar{padding:20px 16px calc(24px + env(safe-area-inset-bottom));width:min(320px,calc(100vw - 32px));height:100dvh;overscroll-behavior:contain}
+ .sidebar .brand{padding-right:44px;min-height:44px}
+ .sidebar .mobile-admin-close{display:flex;position:absolute;top:20px;right:16px;align-items:center;justify-content:center;width:44px;height:44px;padding:0;border:1px solid #444;border-radius:8px;background:#222;color:#fff}
+ .sidebar nav a{min-height:48px;padding:12px;gap:12px;font-size:14px}
+ .shell>.main>header{min-height:68px;padding:12px 20px}
+ .shell .menu-button{min-height:44px;min-width:44px}
+ .main .page-heading h1{font-size:28px;line-height:1.2}
+ .main .page-heading{flex-wrap:wrap;gap:16px}
+ .main .page-heading>div:first-child{flex:1 1 220px}
+ .main .actions{gap:8px;max-width:100%}
+ .main .actions button{min-height:44px;font-size:13px}
+ .main .table-toolbar{display:flex;flex-wrap:wrap;gap:12px}
+ .main .table-toolbar>.search{width:100%;max-width:none;flex:1 1 220px}
+ .main .table-wrap{overscroll-behavior-x:contain;scrollbar-width:thin}
+ .main .table-wrap th,.main .table-wrap td{padding:14px 16px}
+ .main .table-wrap button{min-height:44px;min-width:44px}
+ .main .settings-card{min-width:0;overflow-wrap:anywhere}
+ .main .settings-card .actions,.main .dialog-actions{display:flex;flex-wrap:wrap;gap:12px}
+ .main .settings-card .actions>button{flex:1 1 160px}
+ .main :is(input,select,textarea){max-width:100%}
+ .main .checkbox-field{display:flex!important;gap:12px;align-items:flex-start;line-height:1.6}
+ .main .checkbox-field input[type=checkbox]{width:20px;min-width:20px;height:20px;margin:2px 0}
+ .modal{width:calc(100vw - 24px)!important;max-width:640px!important;max-height:calc(100dvh - 24px)!important;overflow:auto!important;border-radius:14px!important;padding:20px!important;margin:12px!important}
+ .modal-overlay{padding:0!important;overscroll-behavior:contain}
+}
+@media(min-width:360px) and (max-width:599px){
+ .main .metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+ .main .metric{padding:16px;min-height:148px}
+ .main .metric-top{font-size:12px;gap:8px;align-items:flex-start}
+ .main .metric-top svg{width:16px;height:16px;flex-shrink:0}
+ .main .metric-value{font-size:28px;margin-block:16px 8px}
+ .main .metric>p{font-size:11px;line-height:1.5}
+}
+@media(max-width:599px){
+ .shell>.main>main{padding:24px 20px 32px}
+ .main .ai-admin-form,.main .form-grid,.main .settings-grid{grid-template-columns:minmax(0,1fr)!important;gap:20px}
+ .main .status-row{gap:12px;flex-wrap:wrap;align-items:center;padding-block:16px}
+ .main .status-row>span:first-child{max-width:100%;overflow-wrap:anywhere}
+ .main .settings-card{padding:20px!important;margin-bottom:20px}
+ .main .settings-card h2{font-size:20px;line-height:1.3}
+ .main .settings-card p,.main .settings-card li{font-size:13px;line-height:1.7}
+ .main .ai-admin-form label,.main .form-grid label{font-size:13px;line-height:1.6}
+ .main .chart{height:180px;margin-inline:0}
+ .main .chart-day>span{font-size:10px;writing-mode:horizontal-tb}
+ .main .metrics{gap:12px}.main .metric{padding:20px}.main .metric-value{font-size:32px}
+ .main .endpoint{font-size:12px;white-space:normal;word-break:break-word}
+ .modal .form-grid{grid-template-columns:minmax(0,1fr)!important}
+ .modal .dialog-actions{flex-direction:column;gap:12px}.modal .dialog-actions button{width:100%;min-height:48px;flex:none}
+ .modal input,.modal select,.modal textarea{font-size:16px;min-height:48px}
+ .toast{inset:auto 16px calc(16px + env(safe-area-inset-bottom))!important;max-width:calc(100vw - 32px);width:auto}
+ .shell>dialog .form-grid{grid-template-columns:minmax(0,1fr)!important}
+ .shell>dialog .dialog-actions{display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
+ .shell>dialog .dialog-actions button{width:100%;min-height:48px}
+}

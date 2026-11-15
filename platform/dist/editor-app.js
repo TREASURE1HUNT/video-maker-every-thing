@@ -1,3 +1,4 @@
+import './mobile-editor.js';
 import {mountEnhancement} from './enhancement-ui.js';
 import {mountEditorControls} from './editor-controls-ui.js';
 import {drawCaption,captionStyle,coverSettings,validateCues} from './editor-controls-core.js';
