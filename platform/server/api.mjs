@@ -78,14 +78,14 @@ async function gateway(req,env){
  if(!Array.isArray(b.messages)||b.messages.length>40||!b.messages.every(m=>['user','assistant'].includes(m.role)&&typeof m.content==='string'&&m.content.length<=14000))fail(400,'Некорректные сообщения');
  const key=str(req.headers.get('Idempotency-Key')||b.requestId,100),idem=user.id+':'+key;
  let prior=await first(env.DB,'SELECT * FROM requests WHERE idem=?',idem);
- if(prior){if(prior.status==='complete')return json(JSON.parse(prior.response));fail(409,'Этот запрос уже обрабатывался. Для новой попытки нужен новый идентификатор')}
+ if(prior){if(prior.status==='complete')return json(JSON.parse(prior.response));return json({error:prior.status==='reserved'?'Этот запрос ещё выполняется. Дождитесь ответа.':'Предыдущая попытка завершилась ошибкой. Кредиты возвращены; отправьте запрос заново.',code:prior.status==='reserved'?'REQUEST_IN_PROGRESS':'REQUEST_FAILED'},409)}
  const id=uid(),t=now();
  const r=await env.DB.batch([
   stmt(env.DB,"INSERT OR IGNORE INTO requests SELECT ?,id,?,'reserved',?,NULL,? FROM users WHERE id=? AND credits>=? AND status='active'",id,idem,model.cost,t,user.id,model.cost),
   stmt(env.DB,'UPDATE users SET credits=credits-? WHERE id=? AND EXISTS(SELECT 1 FROM requests WHERE id=?)',model.cost,user.id,id),
   stmt(env.DB,'INSERT INTO ledger SELECT ?,user_id,?, ?,?,created_at FROM requests WHERE id=?',id,-model.cost,'ИИ: '+model.name,user.email,id)
  ]);
- if(!r[0].meta.changes)fail(409,'Недостаточно кредитов или повторный запрос');
+ if(!r[0].meta.changes){const repeated=await first(env.DB,'SELECT status,response FROM requests WHERE idem=?',idem);if(repeated?.status==='complete')return json(JSON.parse(repeated.response));if(repeated)return json({error:'Этот запрос уже выполняется. Повторного списания нет.',code:'REQUEST_IN_PROGRESS'},409);const balance=(await first(env.DB,'SELECT credits FROM users WHERE id=?',user.id))?.credits||0;return json({error:`Недостаточно кредитов: на балансе ${balance}, стоимость запроса ${model.cost}. Не хватает ${Math.max(0,model.cost-balance)}.`,code:'INSUFFICIENT_CREDITS',balance,required:model.cost,missing:Math.max(0,model.cost-balance)},402)}
  try{
   const data=validateAIResult(await executeAI(env,user,model,{...b,executionId:id},skill),b);
   await stmt(env.DB,"UPDATE requests SET status='complete',response=? WHERE id=?",JSON.stringify(data),id).run();return json(data);
