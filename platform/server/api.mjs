@@ -1,3 +1,4 @@
+import {reconcileOwner} from './ownership.mjs';
 import {telegramPublic,telegramAdmin} from './telegram.mjs';
 import {enhancementRoutes} from './enhancement.mjs';
 import {voiceAdmin,speechRoutes} from './speech.mjs';
@@ -99,6 +100,7 @@ async function gateway(req,env){
 export async function api(req,env){
  try{
   if(!env.DB)fail(503,'База данных не подключена');
+  await reconcileOwner(env);
   const url=new URL(req.url),path=url.pathname;
   const telegramResult=await telegramPublic(req,env);if(telegramResult)return telegramResult;
   const authResult=await publicAuth(req,env);if(authResult)return authResult;
