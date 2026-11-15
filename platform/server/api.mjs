@@ -1,7 +1,8 @@
+import {speechRoutes} from './speech.mjs';
 import {publicAuth,adminAuth,sessionUser} from './auth.mjs';
 import {aiRoutes,aiReady,resolveSkill,executeAI,validateAIResult} from './ai.mjs';
 import {account} from './account.mjs';
-import {billing,requirePaid,requireModel,planCatalog} from './billing.mjs';
+import {paymentAdmin,paymentKey,billing,requirePaid,requireModel,planCatalog} from './billing.mjs';
 const now=()=>new Date().toISOString(), uid=()=>crypto.randomUUID();
 const fail=(status,message)=>{throw Object.assign(new Error(message),{status})};
 const json=(data,status=200)=>Response.json(data,{status,headers:{'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
@@ -101,7 +102,7 @@ export async function api(req,env){
   if(req.method!=='GET'&&req.headers.get('Origin')&&req.headers.get('Origin')!==url.origin)fail(403,'Другой источник запроса');
   if(path==='/v1/chat'&&req.method==='POST')return await gateway(req,env);
   if(path==='/api/redeem'&&req.method==='POST'){const {user,token}=await tokenUser(req,env);if(token.scope!=='promo:redeem')fail(403,'Токен не разрешает активацию промокодов');return json(await redeem(env.DB,user,(await body(req)).code))}
-  const u=await identity(req,env),perms=permissions[u.role]||[];const authAdminResult=await adminAuth(req,env,u);if(authAdminResult)return authAdminResult;const aiResult=await aiRoutes(req,env,u);if(aiResult)return aiResult;const accountResult=await account(req,env,u);if(accountResult)return accountResult;const customerResult=await billing(req,env,u);if(customerResult)return customerResult;
+  const u=await identity(req,env),perms=permissions[u.role]||[];const paymentResult=await paymentAdmin(req,env,u);if(paymentResult)return paymentResult;const authAdminResult=await adminAuth(req,env,u);if(authAdminResult)return authAdminResult;const speechResult=await speechRoutes(req,env,u);if(speechResult)return speechResult;const aiResult=await aiRoutes(req,env,u);if(aiResult)return aiResult;const accountResult=await account(req,env,u);if(accountResult)return accountResult;const customerResult=await billing(req,env,u);if(customerResult)return customerResult;
   if(path==='/api/me')return json({user:u,permissions:perms,gatewayConfigured:!!env.AI_GATEWAY_URL});
   if(!perms.length)fail(403,'Требуется роль администратора');
   const section=path.split('/')[3];
@@ -112,7 +113,7 @@ export async function api(req,env){
    for(const name of names){if(name==='credits'||name==='billing')continue;
     tables[name]=await all(env.DB,name==='tokens'?'SELECT t.id,t.user_id,t.name,t.prefix,t.scope,t.expires_at,t.revoked,t.created_at,t.last_used,u.email FROM tokens t JOIN users u ON u.id=t.user_id ORDER BY t.created_at DESC LIMIT 500':name==='users'&&u.role!=='owner'&&u.role!=='admin'?'SELECT id,email,name,status,plan,credits FROM users ORDER BY created_at DESC LIMIT 500':`SELECT * FROM ${name} ORDER BY rowid DESC LIMIT 500`);
    }
-   if(perms.includes('billing')){tables.plans=await planCatalog(env.DB);tables.subscriptions=await all(env.DB,'SELECT * FROM subscriptions');tables.orders=await all(env.DB,'SELECT * FROM orders ORDER BY created_at DESC LIMIT 100')}return json({tables,permissions:perms,user:u,gatewayConfigured:!!env.AI_GATEWAY_URL,paymentConfigured:!!env.NOWPAYMENTS_API_KEY,limit:500});
+   if(perms.includes('billing')){tables.plans=await planCatalog(env.DB);tables.subscriptions=await all(env.DB,'SELECT * FROM subscriptions');tables.orders=await all(env.DB,'SELECT * FROM orders ORDER BY created_at DESC LIMIT 100')}return json({tables,permissions:perms,user:u,gatewayConfigured:!!env.AI_GATEWAY_URL,paymentConfigured:!!await paymentKey(env),limit:500});
   }
   if(!perms.includes(section))fail(403,'Эта операция не разрешена вашей роли');
   if(req.method!=='POST')fail(405,'Ожидается POST');
@@ -152,4 +153,5 @@ export async function api(req,env){
   return json({ok:true,id});
  }catch(e){if(!e.status)console.error('ADMIN_API_ERROR',e.message);return json({error:e.status?e.message:'Ошибка базы данных. Проверьте уникальность email, кода и идентификаторов.'},e.status||500)}
 }
+
 

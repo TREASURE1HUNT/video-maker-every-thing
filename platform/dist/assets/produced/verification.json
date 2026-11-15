@@ -1,0 +1,68 @@
+[
+  {
+    "id": "auto",
+    "seconds": 18.368,
+    "width": 720,
+    "height": 1280,
+    "video": "h264",
+    "audio": "aac",
+    "cover": true,
+    "editableSegments": 3,
+    "sha256": "e408e0a31a21fbb217be182f3d2ef06efa68189323914615e819c19c1e6f7989"
+  },
+  {
+    "id": "product",
+    "seconds": 17.707,
+    "width": 1280,
+    "height": 720,
+    "video": "h264",
+    "audio": "aac",
+    "cover": true,
+    "editableSegments": 3,
+    "sha256": "2344f94706610e1315852f73705233b392db50188a58e3d7a4185c3ace3ac4c1"
+  },
+  {
+    "id": "story",
+    "seconds": 18.816,
+    "width": 720,
+    "height": 1280,
+    "video": "h264",
+    "audio": "aac",
+    "cover": true,
+    "editableSegments": 3,
+    "sha256": "a0b2c9ec383ce98856bd580cea0a28b3fc9d2d967cc0a5e6790d3b48028b9b6b"
+  },
+  {
+    "id": "travel",
+    "seconds": 18.133333,
+    "width": 1280,
+    "height": 720,
+    "video": "h264",
+    "audio": "aac",
+    "cover": true,
+    "editableSegments": 3,
+    "sha256": "051131660b5792162f44e4c4f2bc51949b8f47d6165661f903c7c0dad573dff2"
+  },
+  {
+    "id": "promo",
+    "seconds": 19.435,
+    "width": 1280,
+    "height": 720,
+    "video": "h264",
+    "audio": "aac",
+    "cover": true,
+    "editableSegments": 3,
+    "sha256": "5454d8ac3b610c943793854b15c5a63fcca1fe59467c9a173fe05f346685897c"
+  },
+  {
+    "id": "interview",
+    "seconds": 18.005,
+    "width": 1280,
+    "height": 720,
+    "video": "h264",
+    "audio": "aac",
+    "cover": true,
+    "editableSegments": 3,
+    "sha256": "a898c5ca3a618d45dd50f99eff4b4f46c326029ec7599b215b0c6de2141ef70f"
+  }
+]

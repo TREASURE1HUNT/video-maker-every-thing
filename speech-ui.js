@@ -1,0 +1,1 @@
+export async function createSpeech({text,voice='alloy',speed=1}){const r=await fetch('/api/ai/speech',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({text,voice,speed:Number(speed)})});if(!r.ok){let d;try{d=await r.json()}catch{}throw Error(d?.error||'Синтез речи не завершён')}return r.blob()}

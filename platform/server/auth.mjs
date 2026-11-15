@@ -21,7 +21,7 @@ async function finishSession(env,user,method){if(!user||user.status!=='active')f
 const redirect=(url,headers={})=>new Response(null,{status:302,headers:{Location:url,'Cache-Control':'no-store',...headers}});
 export async function publicAuth(req,env){const url=new URL(req.url),p=url.pathname,db=env.DB;if(!p.startsWith('/api/auth/'))return null;
  if(req.method!=='GET'&&req.headers.get('Origin')&&req.headers.get('Origin')!==url.origin)fail(403,'Другой источник запроса');
- if(p==='/api/auth/options'&&req.method==='GET'){const c=await config(env);return out({email:!!(c.mail_enabled&&c.mail_secret&&c.mail_from),yandex:!!(c.yandex_enabled&&c.yandex_client_id&&c.yandex_secret),chatgpt:true})}
+ if(p==='/api/auth/options'&&req.method==='GET'){const c=await config(env);return out({email:!!(c.mail_enabled&&c.mail_secret&&c.mail_from),yandex:!!(c.yandex_enabled&&c.yandex_client_id&&c.yandex_secret),chatgpt:false})}
  if(p==='/api/auth/request-code'&&req.method==='POST'){
   const b=await body(req),mail=email(b.email),c=await config(env);if(!c.mail_enabled||!c.mail_secret||!c.mail_from)fail(503,'Отправка кодов пока не подключена. Владелец должен настроить почтовый сервис');
   const id=crypto.randomUUID(),browser=token(),ip=await signature(env,'ip:'+(req.headers.get('cf-connecting-ip')||'unknown')),t=now(),minute=new Date(Date.now()-60000).toISOString(),hour=new Date(Date.now()-3600000).toISOString();let n;do{n=crypto.getRandomValues(new Uint32Array(1))[0]}while(n>=4294000000);const code=String(n%1000000).padStart(6,'0'),codeHash=await signature(env,id+':'+mail+':'+code);

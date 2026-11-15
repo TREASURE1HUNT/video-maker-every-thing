@@ -43,6 +43,13 @@
       "when": 1794704731855,
       "tag": "0005_known_spiral",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1794760000000,
+      "tag": "0006_studio_upgrade",
+      "breakpoints": true
     }
   ]
 }
