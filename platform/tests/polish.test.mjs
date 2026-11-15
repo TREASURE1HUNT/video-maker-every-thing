@@ -12,10 +12,10 @@ test('monochrome refinement retains reduced-motion, visible focus and small-scre
  const admin=fs.readFileSync('admin/src/main.tsx','utf8');
  assert.ok(admin.includes("import '../../dist/polish.css'"));assert.ok(admin.includes("import './polish-admin.css'"));
 });
-test('home keeps real video controls, truthful demo timing and functional studio destinations',()=>{
+test('home uses authored background video, an explicit pause action and functional destinations',()=>{
  const s=fs.readFileSync('dist/index.html','utf8');
- assert.match(s,/<video id="intro-video" controls playsinline/);assert.match(s,/assets\/hero\/intro.mp4/);
- assert.match(s,/<figcaption class="film-caption">/);assert.match(s,/href="workspace.html"/);assert.match(s,/href="editor.html\?demo=1"/);
+ assert.match(s,/<video id="hero-background"[^>]*autoplay muted loop playsinline/);assert.match(s,/assets\/hero\/vmet-promo-e62c9625b417.mp4/);
+ assert.match(s,/id="hero-background-toggle"/);assert.match(s,/href="workspace.html"/);assert.match(s,/href="editor.html\?demo=1"/);
  assert.ok(!s.includes('id="scene"'));
 });
 test('profile UI sends only editable fields, not readonly email rejected by server',()=>{
