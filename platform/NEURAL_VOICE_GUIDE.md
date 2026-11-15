@@ -27,3 +27,7 @@ See video-templates/NEURAL_CAPTION_UPGRADE.md for transcripts and media producti
 ```text
 Create a VMET montage using only the supplied asset IDs, durations and verified speech. Return the documented JSON plan, never invented media or timing. Use the chosen tier-eligible model and configured voice engine. If a voice backend is not connected or the provider has no funds, report that state and refund reserved credits; never substitute desktop speech while calling it neural. Import timed caption cues and keep captions above native video controls.
 ```
+
+## Hosting compatibility
+Credentialed outbound provider fetches use redirect:manual and reject non-2xx responses. Cloudflare Workers does not implement redirect:error; this was found by a production speech probe and corrected for AI, speech, mail and Yandex provider calls. No redirect is followed with credentials. Reference: https://developers.cloudflare.com/workers/runtime-apis/request/
+
