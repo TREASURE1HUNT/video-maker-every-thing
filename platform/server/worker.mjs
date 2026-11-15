@@ -1,9 +1,10 @@
+import {sessionUser} from './auth.mjs';
 import assets from './assets.generated.mjs';
 import {api} from './api.mjs';
 export default {async fetch(req,env){
  const url=new URL(req.url);
  if(url.pathname.startsWith('/api/')||url.pathname==='/v1/chat')return api(req,env);
- if(url.pathname==='/admin'||url.pathname.startsWith('/admin/')){const email=req.headers.get('oai-authenticated-user-email')?.toLowerCase();if(!email)return Response.redirect(url.origin+'/signin-with-chatgpt?return_to='+encodeURIComponent(url.pathname),302);if(!env.DB)return new Response('Service unavailable',{status:503});const member=await env.DB.prepare('SELECT role,status FROM users WHERE email=?').bind(email).first();if(email!==env.ADMIN_EMAIL?.toLowerCase()&&(!member||member.status!=='active'||!['owner','admin','finance','support'].includes(member.role)))return new Response('<!doctype html><html lang="ru"><meta charset="utf-8"><title>Доступ ограничен</title><h1>Доступ только для администраторов</h1><a href="/account.html">Перейти в свой аккаунт</a></html>',{status:403,headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store'}});}
+ if(url.pathname==='/admin'||url.pathname.startsWith('/admin/')){if(!env.DB)return new Response('Service unavailable',{status:503});const local=await sessionUser(req,env),email=req.headers.get('oai-authenticated-user-email')?.toLowerCase();if(!local&&!email)return Response.redirect(url.origin+'/login.html?next=%2Fadmin%2F',302);const member=local||await env.DB.prepare('SELECT role,status FROM users WHERE email=?').bind(email).first();const ownerSSO=!local&&email===env.ADMIN_EMAIL?.toLowerCase();if(!ownerSSO&&(!member||member.status!=='active'||!['owner','admin','finance','support'].includes(member.role)))return new Response('<!doctype html><html lang="ru"><meta charset="utf-8"><title>Доступ ограничен</title><h1>Доступ только для администраторов</h1><a href="/account.html">Перейти в свой аккаунт</a></html>',{status:403,headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store'}});}
  if(url.pathname==='/admin')return Response.redirect(url.origin+'/admin/',302);
  if(url.pathname.startsWith('/admin/')){
   const entry=assets[url.pathname]||(!url.pathname.split('/').pop().includes('.')?assets['/admin/index.html']:null);

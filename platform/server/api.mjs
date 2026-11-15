@@ -1,3 +1,4 @@
+import {publicAuth,adminAuth,sessionUser} from './auth.mjs';
 import {aiRoutes,aiReady,resolveSkill,executeAI,validateAIResult} from './ai.mjs';
 import {account} from './account.mjs';
 import {billing,requirePaid,requireModel,planCatalog} from './billing.mjs';
@@ -16,9 +17,10 @@ const first=(db,sql,...args)=>stmt(db,sql,...args).first();
 const audit=(db,actor,action,entity,details={})=>stmt(db,'INSERT INTO audit VALUES(?,?,?,?,?,?)',uid(),actor,action,entity,JSON.stringify(details),now());
 const permissions={owner:['users','models','credits','tokens','promos','campaigns','audit','billing'],admin:['users','models','credits','tokens','promos','campaigns','audit','billing'],finance:['credits','promos','campaigns','audit','billing'],support:['tokens','audit'],user:[]};
 async function identity(req,env){
+ const local=await sessionUser(req,env);if(local){if(local.status!=='active')fail(403,'Аккаунт приостановлен');return local}
  const email=req.headers.get('oai-authenticated-user-email')?.toLowerCase();
  // Only trusted Sites ingress supplies identity; do not put this Worker behind an untrusted proxy.
- if(!email)fail(401,'Войдите через ChatGPT');
+ if(!email)fail(401,'Войдите в аккаунт');
  let user=await first(env.DB,'SELECT * FROM users WHERE email=?',email);
  if(!user&&env.ADMIN_EMAIL&&email===env.ADMIN_EMAIL.toLowerCase()){
   await stmt(env.DB,"INSERT OR IGNORE INTO users VALUES(?,?,?,'owner','active','free',0,'[\"*\"]',?)",uid(),email,'Владелец',now()).run();
@@ -95,10 +97,11 @@ export async function api(req,env){
  try{
   if(!env.DB)fail(503,'База данных не подключена');
   const url=new URL(req.url),path=url.pathname;
+  const authResult=await publicAuth(req,env);if(authResult)return authResult;
   if(req.method!=='GET'&&req.headers.get('Origin')&&req.headers.get('Origin')!==url.origin)fail(403,'Другой источник запроса');
   if(path==='/v1/chat'&&req.method==='POST')return await gateway(req,env);
   if(path==='/api/redeem'&&req.method==='POST'){const {user,token}=await tokenUser(req,env);if(token.scope!=='promo:redeem')fail(403,'Токен не разрешает активацию промокодов');return json(await redeem(env.DB,user,(await body(req)).code))}
-  const u=await identity(req,env),perms=permissions[u.role]||[];const aiResult=await aiRoutes(req,env,u);if(aiResult)return aiResult;const accountResult=await account(req,env,u);if(accountResult)return accountResult;const customerResult=await billing(req,env,u);if(customerResult)return customerResult;
+  const u=await identity(req,env),perms=permissions[u.role]||[];const authAdminResult=await adminAuth(req,env,u);if(authAdminResult)return authAdminResult;const aiResult=await aiRoutes(req,env,u);if(aiResult)return aiResult;const accountResult=await account(req,env,u);if(accountResult)return accountResult;const customerResult=await billing(req,env,u);if(customerResult)return customerResult;
   if(path==='/api/me')return json({user:u,permissions:perms,gatewayConfigured:!!env.AI_GATEWAY_URL});
   if(!perms.length)fail(403,'Требуется роль администратора');
   const section=path.split('/')[3];
