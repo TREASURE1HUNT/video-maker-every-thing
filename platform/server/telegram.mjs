@@ -61,6 +61,17 @@ export async function telegramAdmin(req,env,u){
  if(req.method!=='POST')fail(405,'Ожидается POST');const b=await body(req);
  if(p.endsWith('/settings')){const url=appURL(b.app_url);if(new URL(url).origin!==new URL(req.url).origin)fail(400,'Mini App должен находиться на этом сайте');let secret=c.bot_secret;if(b.token){if(!/^\d{5,15}:[A-Za-z0-9_-]{30,100}$/.test(b.token))fail(400,'Проверьте токен бота');secret=await seal(b.token,env,'telegram:bot')}
   if(b.enabled&&!(secret||env.TELEGRAM_BOT_TOKEN))fail(400,'Добавьте токен бота');await st(env,'INSERT INTO telegram_config VALUES(?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET enabled=excluded.enabled,bot_secret=excluded.bot_secret,app_url=excluded.app_url,welcome=excluded.welcome,updated_at=excluded.updated_at','main',b.enabled?1:0,secret,c.username,url,String(b.welcome||c.welcome).slice(0,1000),now()).run();return out({ok:true})}
+ if(p.endsWith('/branding')){
+  const avatarUrl='https://video-maker-every-thing.pages.dev/assets/telegram-avatar-v2.jpg';
+  const image=await fetch(avatarUrl,{signal:AbortSignal.timeout(15000)});if(!image.ok||!(image.headers.get('Content-Type')||'').startsWith('image/jpeg'))fail(502,'Белый логотип ещё не опубликован');
+  const bytes=await image.arrayBuffer();if(bytes.byteLength>2000000||bytes.byteLength<100)fail(502,'Проверьте файл аватара');
+  const me=await bot(env,c,'getMe'),before=await bot(env,c,'getUserProfilePhotos',{user_id:me.id,limit:1});
+  const form=new FormData();form.set('photo',JSON.stringify({type:'static',photo:'attach://avatar'}));form.set('avatar',new Blob([bytes],{type:'image/jpeg'}),'vmet-white.jpg');
+  let result;try{const response=await fetch('https://api.telegram.org/bot'+await botToken(env,c)+'/setMyProfilePhoto',{method:'POST',body:form,signal:AbortSignal.timeout(20000)});result=await response.json();if(!response.ok||!result.ok)throw Error()}catch{fail(502,'Telegram не подтвердил обновление аватара')}
+  const after=await bot(env,c,'getUserProfilePhotos',{user_id:me.id,limit:1});
+  await st(env,'INSERT INTO audit VALUES(?,?,?,?,?,?)',crypto.randomUUID(),u.email,'telegram.avatar.update','main',JSON.stringify({previous_photo:before.photos?.[0]?.at(-1)?.file_id||null,photo:after.photos?.[0]?.at(-1)?.file_id||null,asset:avatarUrl}),now()).run();
+  return out({ok:true,username:me.username,photoPresent:after.total_count>0,message:'Белый логотип установлен в Telegram'});
+ }
  if(p.endsWith('/test')){const me=await bot(env,c,'getMe');await st(env,"UPDATE telegram_config SET username=? WHERE id='main'",me.username).run();const info=await bot(env,c,'getWebhookInfo');return out({ok:true,username:me.username,webhook:info.url,pending:info.pending_update_count,lastError:info.last_error_date?'Webhook требует проверки доставки':''})}
  if(p.endsWith('/connect')){if(!c.enabled||!c.app_url||!env.TELEGRAM_WEBHOOK_SECRET)fail(400,'Сохраните настройки и серверный секрет webhook');
   await bot(env,c,'setMyCommands',{commands:[{command:'start',description:'Открыть видеостудию'},{command:'studio',description:'Создать видео'},{command:'balance',description:'Баланс и подписка'},{command:'help',description:'Как пользоваться студией'}]});

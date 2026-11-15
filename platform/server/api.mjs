@@ -5,7 +5,7 @@ import {voiceAdmin,speechRoutes} from './speech.mjs';
 import {publicAuth,adminAuth,sessionUser} from './auth.mjs';
 import {aiRoutes,aiReady,resolveSkill,executeAI,validateAIResult,aiFailure} from './ai.mjs';
 import {account} from './account.mjs';
-import {paymentAdmin,paymentKey,billing,requirePaid,requireModel,planCatalog} from './billing.mjs';
+import {paymentAdmin,paymentKey,billing,requirePaid,requireModel,planCatalog,entitlement} from './billing.mjs';
 const now=()=>new Date().toISOString(), uid=()=>crypto.randomUUID();
 const fail=(status,message)=>{throw Object.assign(new Error(message),{status})};
 const json=(data,status=200)=>Response.json(data,{status,headers:{'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
@@ -118,6 +118,7 @@ export async function api(req,env){
    for(const name of names){if(name==='credits'||name==='billing')continue;
     tables[name]=await all(env.DB,name==='tokens'?'SELECT t.id,t.user_id,t.name,t.prefix,t.scope,t.expires_at,t.revoked,t.created_at,t.last_used,u.email FROM tokens t JOIN users u ON u.id=t.user_id ORDER BY t.created_at DESC LIMIT 500':name==='users'&&u.role!=='owner'&&u.role!=='admin'?'SELECT id,email,name,status,plan,credits FROM users ORDER BY created_at DESC LIMIT 500':`SELECT * FROM ${name} ORDER BY rowid DESC LIMIT 500`);
    }
+   if(tables.users)tables.users=await Promise.all(tables.users.map(async user=>({...user,plan:(await entitlement(env.DB,user)).plan})));
    if(perms.includes('billing')){tables.plans=await planCatalog(env.DB);tables.subscriptions=await all(env.DB,'SELECT * FROM subscriptions');tables.orders=await all(env.DB,'SELECT * FROM orders ORDER BY created_at DESC LIMIT 100')}return json({tables,permissions:perms,user:u,gatewayConfigured:!!env.AI_GATEWAY_URL||!!env.OPENROUTER_API_KEY,paymentConfigured:!!await paymentKey(env),limit:500});
   }
   if(!perms.includes(section))fail(403,'Эта операция не разрешена вашей роли');
@@ -130,7 +131,8 @@ export async function api(req,env){
    if(existing?.role==='owner'||(email===env.ADMIN_EMAIL?.toLowerCase()))fail(403,'Владелец защищён от изменений');
    if(u.role!=='owner'&&(role==='admin'||existing?.role==='admin'))fail(403,'Только владелец управляет администраторами');
    const access=Array.isArray(b.models)&&b.models.length<100&&b.models.every(x=>typeof x==='string'&&x.length<100)?b.models:fail(400,'Некорректный список моделей');
-   await db.batch([stmt(db,`INSERT INTO users VALUES(?,?,?,?,?,?,0,?,?) ON CONFLICT(id) DO UPDATE SET email=excluded.email,name=excluded.name,role=excluded.role,status=excluded.status,plan=excluded.plan,models=excluded.models`,id,email,str(b.name),role,choice(b.status,['active','suspended']),choice(b.plan,['free','lite','plus','pro']),JSON.stringify(access),now()),audit(db,actor,'users.save',id,{email,role,status:b.status})]);
+   const selectedPlan=choice(b.plan,['free','lite','plus','pro']),currentPlan=existing?(await entitlement(db,existing)).plan:'free',days=b.days===undefined?30:num(b.days,1,366);const subscriptionChanges=[];if(!Number.isInteger(days))fail(400,'Срок должен быть целым числом дней');if(selectedPlan==='free')subscriptionChanges.push(stmt(db,'DELETE FROM subscriptions WHERE user_id=?',id));else if(selectedPlan!==currentPlan)subscriptionChanges.push(stmt(db,'INSERT INTO subscriptions VALUES(?,?,?,?,?) ON CONFLICT(user_id) DO UPDATE SET plan=excluded.plan,starts_at=excluded.starts_at,ends_at=excluded.ends_at,source=excluded.source',id,selectedPlan,now(),new Date(Date.now()+days*86400000).toISOString(),'admin-user'),audit(db,actor,'billing.grant',id,{plan:selectedPlan,days,reason:'Выдача через карточку пользователя'}));
+   await db.batch([stmt(db,`INSERT INTO users VALUES(?,?,?,?,?,?,0,?,?) ON CONFLICT(id) DO UPDATE SET email=excluded.email,name=excluded.name,role=excluded.role,status=excluded.status,plan=excluded.plan,models=excluded.models`,id,email,str(b.name),role,choice(b.status,['active','suspended']),choice(b.plan,['free','lite','plus','pro']),JSON.stringify(access),now()),...subscriptionChanges,audit(db,actor,'users.save',id,{email,role,status:b.status,plan:selectedPlan})]);
   }else if(section==='models'){
    if(!/^[a-zA-Z0-9._:/-]{1,100}$/.test(id))fail(400,'Недопустимый ID модели');
    await db.batch([stmt(db,'INSERT INTO models VALUES(?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET provider=excluded.provider,name=excluded.name,enabled=excluded.enabled,cost=excluded.cost,description=excluded.description,min_plan=excluded.min_plan',id,choice(b.provider,['openai','anthropic','google','custom']),str(b.name),b.enabled?1:0,num(b.cost,0,10000),String(b.description||'').slice(0,500),choice(b.min_plan||'lite',['lite','plus','pro'])),audit(db,actor,'models.save',id,{enabled:!!b.enabled,cost:b.cost})]);
