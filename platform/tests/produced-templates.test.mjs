@@ -14,7 +14,7 @@ test('six produced templates ship distinct posters, export covers, video and edi
  }
 });
 test('actual human interview retains original speech and explicit factual source',()=>{
- const t=TEMPLATES.find(t=>t.id==='interview');assert.equal(t.originalAudio,true);assert.ok(!t.audioFile);assert.match(t.description,/настоящего интервью/);assert.match(t.audioDescription,/Оригинальный английский/);
+ const t=TEMPLATES.find(t=>t.id==='interview');assert.equal(t.originalAudio,true);assert.ok(!t.audioFile);assert.match(t.description,/настоящ(?:его|ее) интервью/i);assert.match(t.audioDescription,/Оригинальный английский/);
  const sources=JSON.parse(fs.readFileSync(local('assets/produced/sources.json')));assert.ok(sources.sources.some(s=>s.id==='nasa-interview'&&s.page==='https://svs.gsfc.nasa.gov/13868/'));
 });
 test('examples use all six edited videos and purpose-made card covers',()=>{
@@ -22,3 +22,14 @@ test('examples use all six edited videos and purpose-made card covers',()=>{
  for(const t of TEMPLATES){assert.ok(html.includes(t.preview));assert.ok(html.includes(t.poster))}
  assert.ok(!html.includes('assets/footage/auto.mp4'));
 });
+test('all six templates include readable timed editable subtitles and landscape previews',()=>{
+ for(const t of TEMPLATES){
+  assert.equal(t.width,1280);assert.equal(t.height,720);assert.equal(t.aspect,'16:9');assert.ok(t.cues.length>=6);
+  assert.ok(t.captionStyle.fontSize>=44);
+  assert.ok(t.captionStyle.safeBottom>=180);assert.equal(t.captionStyle.nativeControlsReserve,true);
+  for(const c of t.cues){assert.ok(c.start>=0&&c.end>c.start&&c.end<=t.duration+.01);assert.ok(c.text.trim())}
+  for(const track of Object.values(t.captionTracks)){assert.ok(fs.statSync(local(track.srt)).size>100);assert.ok(fs.readFileSync(local(track.vtt),'utf8').startsWith('WEBVTT'))}
+  if(t.id!=='interview'){assert.match(t.preview,/-neural-v2\.mp4$/);assert.match(t.audioDescription,/FishAudio/);assert.ok(!t.audioDescription.includes('Irina'))}
+ }
+});
+

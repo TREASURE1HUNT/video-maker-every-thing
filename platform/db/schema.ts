@@ -25,3 +25,5 @@ export const auth_identities=sqliteTable('auth_identities',{id:id(),user_id:text
 export const auth_limits=sqliteTable('auth_limits',{id:id(),count:integer('count').notNull(),expires_at:text('expires_at').notNull()});
 
 export const payment_config=sqliteTable('payment_config',{id:id(),secret:text('secret').notNull().default(''),enabled:integer('enabled').notNull().default(0),updated_at:text('updated_at').notNull()});
+
+export const speech_backends=sqliteTable('speech_backends',{id:id(),engine:text('engine').notNull(),name:text('name').notNull(),endpoint:text('endpoint').notNull().default(''),secret:text('secret').notNull().default(''),enabled:integer('enabled').notNull().default(0),min_plan:text('min_plan').notNull().default('plus'),cost:integer('cost').notNull().default(5),voice:text('voice').notNull().default('default'),updated_at:text('updated_at').notNull()});

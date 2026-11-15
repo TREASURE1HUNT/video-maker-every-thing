@@ -1,0 +1,122 @@
+[
+  {
+    "id": "auto",
+    "scene": 0,
+    "provider": "OpenRouter",
+    "model": "fish-audio/s2.1-pro-free:free",
+    "text": "Линии, свет, движение. Всё начинается с первого впечатления.",
+    "bytes": 83590
+  },
+  {
+    "id": "auto",
+    "scene": 1,
+    "provider": "OpenRouter",
+    "model": "fish-audio/s2.1-pro-free:free",
+    "text": "Остановись на деталях. Именно они создают характер.",
+    "bytes": 53079
+  },
+  {
+    "id": "auto",
+    "scene": 2,
+    "provider": "OpenRouter",
+    "model": "fish-audio/s2.1-pro-free:free",
+    "text": "Собери свою историю. И выбери следующий маршрут.",
+    "bytes": 56841
+  },
+  {
+    "id": "product",
+    "scene": 0,
+    "provider": "OpenRouter",
+    "model": "fish-audio/s2.1-pro-free:free",
+    "text": "Замедлись на минуту. Твоё утро начинается здесь.",
+    "bytes": 57677
+  },
+  {
+    "id": "product",
+    "scene": 1,
+    "provider": "OpenRouter",
+    "model": "fish-audio/s2.1-pro-free:free",
+    "text": "Тёплая чашка. Свежий кофе. Несколько точных движений.",
+    "bytes": 76067
+  },
+  {
+    "id": "product",
+    "scene": 2,
+    "provider": "OpenRouter",
+    "model": "fish-audio/s2.1-pro-free:free",
+    "text": "Оставь время для себя. И начни день со вкуса.",
+    "bytes": 64782
+  },
+  {
+    "id": "story",
+    "scene": 0,
+    "provider": "OpenRouter",
+    "model": "fish-audio/s2.1-pro-free:free",
+    "text": "Сначала ты замечаешь форму. Свет подчёркивает каждую линию.",
+    "bytes": 68544
+  },
+  {
+    "id": "story",
+    "scene": 1,
+    "provider": "OpenRouter",
+    "model": "fish-audio/s2.1-pro-free:free",
+    "text": "Потом открывается характер. В ракурсе и в деталях.",
+    "bytes": 58095
+  },
+  {
+    "id": "story",
+    "scene": 2,
+    "provider": "OpenRouter",
+    "model": "fish-audio/s2.1-pro-free:free",
+    "text": "И наконец, движение. Продолжение этой истории — за рулём.",
+    "bytes": 70216
+  },
+  {
+    "id": "travel",
+    "scene": 0,
+    "provider": "OpenRouter",
+    "model": "fish-audio/s2.1-pro-free:free",
+    "text": "Иногда достаточно сменить ракурс. И привычное остаётся позади.",
+    "bytes": 70216
+  },
+  {
+    "id": "travel",
+    "scene": 1,
+    "provider": "OpenRouter",
+    "model": "fish-audio/s2.1-pro-free:free",
+    "text": "Не торопись к финалу. Самое интересное — по дороге.",
+    "bytes": 67708
+  },
+  {
+    "id": "travel",
+    "scene": 2,
+    "provider": "OpenRouter",
+    "model": "fish-audio/s2.1-pro-free:free",
+    "text": "Выбери свой маршрут. И посмотри, что за поворотом.",
+    "bytes": 53079
+  },
+  {
+    "id": "promo",
+    "scene": 0,
+    "provider": "OpenRouter",
+    "model": "fish-audio/s2.1-pro-free:free",
+    "text": "Каждая поездка начинается с решения. Куда отправишься ты?",
+    "bytes": 72306
+  },
+  {
+    "id": "promo",
+    "scene": 1,
+    "provider": "OpenRouter",
+    "model": "fish-audio/s2.1-pro-free:free",
+    "text": "Почувствуй ритм. Посмотри на привычное с другого ракурса.",
+    "bytes": 67708
+  },
+  {
+    "id": "promo",
+    "scene": 2,
+    "provider": "OpenRouter",
+    "model": "fish-audio/s2.1-pro-free:free",
+    "text": "Твой следующий маршрут начинается сейчас. Продолжи эту историю.",
+    "bytes": 73141
+  }
+]

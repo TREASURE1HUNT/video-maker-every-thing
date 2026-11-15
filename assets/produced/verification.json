@@ -1,58 +1,58 @@
 [
   {
     "id": "auto",
-    "seconds": 18.368,
-    "width": 720,
-    "height": 1280,
+    "seconds": 14.635,
+    "width": 1280,
+    "height": 720,
     "video": "h264",
     "audio": "aac",
     "cover": true,
     "editableSegments": 3,
-    "sha256": "e408e0a31a21fbb217be182f3d2ef06efa68189323914615e819c19c1e6f7989"
+    "sha256": "27e0493f5ed94177e90b1a64c80603b51eed7526674c51a8ef2124f28cc2913e"
   },
   {
     "id": "product",
-    "seconds": 17.707,
+    "seconds": 14.976,
     "width": 1280,
     "height": 720,
     "video": "h264",
     "audio": "aac",
     "cover": true,
     "editableSegments": 3,
-    "sha256": "2344f94706610e1315852f73705233b392db50188a58e3d7a4185c3ace3ac4c1"
+    "sha256": "95faf39f1e0601566646d48c20a852f2a171afd596506c413657e20f7b722ce3"
   },
   {
     "id": "story",
-    "seconds": 18.816,
-    "width": 720,
-    "height": 1280,
+    "seconds": 14.848,
+    "width": 1280,
+    "height": 720,
     "video": "h264",
     "audio": "aac",
     "cover": true,
     "editableSegments": 3,
-    "sha256": "a0b2c9ec383ce98856bd580cea0a28b3fc9d2d967cc0a5e6790d3b48028b9b6b"
+    "sha256": "e27dc9258ddb2967bdb1135f42c49ea4a6090637dfd92c655bcbf770c2f68285"
   },
   {
     "id": "travel",
-    "seconds": 18.133333,
+    "seconds": 14.485,
     "width": 1280,
     "height": 720,
     "video": "h264",
     "audio": "aac",
     "cover": true,
     "editableSegments": 3,
-    "sha256": "051131660b5792162f44e4c4f2bc51949b8f47d6165661f903c7c0dad573dff2"
+    "sha256": "1cd5ebf6573c3f95631e27d60b07db92fb2f833fec1239d035bbe55c7db1d14d"
   },
   {
     "id": "promo",
-    "seconds": 19.435,
+    "seconds": 15.872,
     "width": 1280,
     "height": 720,
     "video": "h264",
     "audio": "aac",
     "cover": true,
     "editableSegments": 3,
-    "sha256": "5454d8ac3b610c943793854b15c5a63fcca1fe59467c9a173fe05f346685897c"
+    "sha256": "40a26f6b1b3149ccc4c7923694e907a369bbe43ac9d15f79fb9242d19754f761"
   },
   {
     "id": "interview",
@@ -63,6 +63,6 @@
     "audio": "aac",
     "cover": true,
     "editableSegments": 3,
-    "sha256": "a898c5ca3a618d45dd50f99eff4b4f46c326029ec7599b215b0c6de2141ef70f"
+    "sha256": "c093582d20aa7a9218cd6db281c99567cac381db986de25870fd38a675622ed7"
   }
 ]

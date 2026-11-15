@@ -4,3 +4,9 @@ admin/build/
 .dev.vars
 *.sqlite
 *.sqlite-*
+.taste-skill/chrome-*/
+.taste-skill/shots/
+dist/.taste-skill/
+
+__pycache__/
+*.pyc

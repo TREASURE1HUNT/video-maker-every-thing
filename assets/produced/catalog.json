@@ -2,7 +2,7 @@
   {
     "id": "auto",
     "name": "Автомобиль: характер в движении",
-    "aspect": "9:16",
+    "aspect": "16:9",
     "category": "Авто",
     "tag": "Автообзор",
     "visual": "auto",
@@ -21,32 +21,32 @@
         "Собери свою историю. И выбери следующий маршрут."
       ]
     ],
-    "duration": 18.366666666666667,
+    "duration": 14.633333333333333,
     "fps": 30,
-    "width": 720,
-    "height": 1280,
-    "preview": "assets/produced/auto.mp4",
-    "poster": "assets/produced/auto-card.jpg",
-    "captions": "assets/produced/auto.srt",
+    "width": 1280,
+    "height": 720,
+    "preview": "assets/produced/auto-neural-v2.mp4",
+    "poster": "assets/produced/auto-card-v2.jpg",
+    "captions": "assets/produced/auto-v2.srt",
     "source": "remotion-edited-licensed-footage",
     "description": "Автомобильный обзор: три плана, анимированные заголовки, синхронные субтитры и переходы.",
-    "audioDescription": "Русская синтетическая озвучка Microsoft Irina, авторская синтезированная музыка",
+    "audioDescription": "Нейросетевая озвучка FishAudio S2.1 Pro через OpenRouter; авторская инструментальная подложка.",
     "segments": [
       {
         "start": 0,
-        "end": 6.9,
+        "end": 5.933333333333334,
         "title": "Первое впечатление",
         "transition": "cut"
       },
       {
-        "start": 6.9,
-        "end": 12.466666666666667,
+        "start": 5.933333333333334,
+        "end": 9.966666666666667,
         "title": "Ближе к деталям",
         "transition": "fade"
       },
       {
-        "start": 12.466666666666667,
-        "end": 18.366666666666667,
+        "start": 9.966666666666667,
+        "end": 14.633333333333333,
         "title": "В твоём ритме",
         "transition": "slide"
       }
@@ -85,7 +85,7 @@
       {
         "sourceId": "hero/74.mp4",
         "start": 0,
-        "end": 6.9,
+        "end": 5.933333333333334,
         "speed": 1,
         "transition": "cut",
         "title": "Первое впечатление",
@@ -95,7 +95,7 @@
       {
         "sourceId": "hero/50.mp4",
         "start": 0,
-        "end": 5.566666666666666,
+        "end": 4.033333333333333,
         "speed": 1,
         "transition": "fade",
         "title": "Ближе к деталям",
@@ -105,7 +105,7 @@
       {
         "sourceId": "hero/64.mp4",
         "start": 0,
-        "end": 5.9,
+        "end": 4.666666666666666,
         "speed": 1,
         "transition": "slide",
         "title": "В твоём ритме",
@@ -113,9 +113,60 @@
         "textPosition": "top"
       }
     ],
-    "audioFile": "assets/produced/auto-audio.m4a",
+    "audioFile": "assets/produced/auto-audio-v2.m4a",
     "originalAudio": false,
-    "cover": "assets/produced/auto-cover.png"
+    "cover": "assets/produced/auto-cover-v2.png",
+    "alternateAspects": [
+      "9:16",
+      "1:1"
+    ],
+    "captionTracks": {
+      "ru": {
+        "srt": "assets/produced/auto-v2.srt",
+        "vtt": "assets/produced/auto-v2.vtt"
+      }
+    },
+    "cues": [
+      {
+        "start": 0.55,
+        "end": 3.57,
+        "text": "Линии, свет, движение. Всё"
+      },
+      {
+        "start": 3.57,
+        "end": 5.58,
+        "text": "начинается с первого впечатления."
+      },
+      {
+        "start": 6.483,
+        "end": 8.283,
+        "text": "Остановись на деталях, именно"
+      },
+      {
+        "start": 8.283,
+        "end": 9.613,
+        "text": "они создают характер."
+      },
+      {
+        "start": 10.517,
+        "end": 12.397,
+        "text": "Собери свою историю. И"
+      },
+      {
+        "start": 12.397,
+        "end": 13.987,
+        "text": "выбери следующий маршрут."
+      }
+    ],
+    "captionStyle": {
+      "fontSize": 46,
+      "background": "rgba(8,8,8,.91)",
+      "safeBottom": 180,
+      "safeBottomRatio": 0.25,
+      "nativeControlsReserve": true
+    },
+    "voiceModel": "fish-audio/s2.1-pro-free:free",
+    "captionSource": "Actual neural narration word timing aligned with Whisper and checked against supplied exact scripts."
   },
   {
     "id": "product",
@@ -139,32 +190,32 @@
         "Оставь время для себя. И начни день со вкуса."
       ]
     ],
-    "duration": 17.7,
+    "duration": 14.966666666666667,
     "fps": 30,
     "width": 1280,
     "height": 720,
-    "preview": "assets/produced/product.mp4",
-    "poster": "assets/produced/product-card.jpg",
-    "captions": "assets/produced/product.srt",
+    "preview": "assets/produced/product-neural-v2.mp4",
+    "poster": "assets/produced/product-card-v2.jpg",
+    "captions": "assets/produced/product-v2.srt",
     "source": "remotion-edited-licensed-footage",
     "description": "Кофейня: крупные планы, спокойный ритм, озвучка и мягкие переходы.",
-    "audioDescription": "Русская синтетическая озвучка Microsoft Irina, авторская синтезированная музыка",
+    "audioDescription": "Нейросетевая озвучка FishAudio S2.1 Pro через OpenRouter; авторская инструментальная подложка.",
     "segments": [
       {
         "start": 0,
-        "end": 5.5,
+        "end": 4.333333333333333,
         "title": "Пауза для себя",
         "transition": "cut"
       },
       {
-        "start": 5.5,
-        "end": 12.233333333333334,
+        "start": 4.333333333333333,
+        "end": 9.8,
         "title": "Всё решают детали",
         "transition": "fade"
       },
       {
-        "start": 12.233333333333334,
-        "end": 17.7,
+        "start": 9.8,
+        "end": 14.966666666666667,
         "title": "Твоё доброе утро",
         "transition": "slide"
       }
@@ -185,7 +236,7 @@
       {
         "sourceId": "production/coffee.mp4",
         "start": 0,
-        "end": 5.5,
+        "end": 4.333333333333333,
         "speed": 1,
         "transition": "cut",
         "title": "Пауза для себя",
@@ -195,7 +246,7 @@
       {
         "sourceId": "production/coffee.mp4",
         "start": 7,
-        "end": 13.733333333333334,
+        "end": 12.466666666666669,
         "speed": 1,
         "transition": "fade",
         "title": "Всё решают детали",
@@ -205,7 +256,7 @@
       {
         "sourceId": "production/coffee.mp4",
         "start": 14,
-        "end": 19.466666666666665,
+        "end": 19.166666666666664,
         "speed": 1,
         "transition": "slide",
         "title": "Твоё доброе утро",
@@ -213,14 +264,70 @@
         "textPosition": "top"
       }
     ],
-    "audioFile": "assets/produced/product-audio.m4a",
+    "audioFile": "assets/produced/product-audio-v2.m4a",
     "originalAudio": false,
-    "cover": "assets/produced/product-cover.png"
+    "cover": "assets/produced/product-cover-v2.png",
+    "alternateAspects": [
+      "9:16",
+      "1:1"
+    ],
+    "captionTracks": {
+      "ru": {
+        "srt": "assets/produced/product-v2.srt",
+        "vtt": "assets/produced/product-v2.vtt"
+      }
+    },
+    "cues": [
+      {
+        "start": 0.55,
+        "end": 2.57,
+        "text": "Замедлись на минуту. Твоё"
+      },
+      {
+        "start": 2.57,
+        "end": 3.9,
+        "text": "утро начинается здесь."
+      },
+      {
+        "start": 4.883,
+        "end": 7.963,
+        "text": "Тёплая чашка. Свежий кофе."
+      },
+      {
+        "start": 7.963,
+        "end": 9.573,
+        "text": "Несколько точных движений."
+      },
+      {
+        "start": 10.35,
+        "end": 12.59,
+        "text": "Оставь время для себя."
+      },
+      {
+        "start": 12.59,
+        "end": 13.65,
+        "text": "И начни день со"
+      },
+      {
+        "start": 13.65,
+        "end": 14.24,
+        "text": "вкуса."
+      }
+    ],
+    "captionStyle": {
+      "fontSize": 46,
+      "background": "rgba(8,8,8,.91)",
+      "safeBottom": 180,
+      "safeBottomRatio": 0.25,
+      "nativeControlsReserve": true
+    },
+    "voiceModel": "fish-audio/s2.1-pro-free:free",
+    "captionSource": "Actual neural narration word timing aligned with Whisper and checked against supplied exact scripts."
   },
   {
     "id": "story",
     "name": "Автомобиль: история в трёх кадрах",
-    "aspect": "9:16",
+    "aspect": "16:9",
     "category": "Shorts / Reels",
     "tag": "Вертикальный ролик",
     "visual": "story",
@@ -239,32 +346,32 @@
         "И наконец, движение. Продолжение этой истории — за рулём."
       ]
     ],
-    "duration": 18.8,
+    "duration": 14.833333333333334,
     "fps": 30,
-    "width": 720,
-    "height": 1280,
-    "preview": "assets/produced/story.mp4",
-    "poster": "assets/produced/story-card.jpg",
-    "captions": "assets/produced/story.srt",
+    "width": 1280,
+    "height": 720,
+    "preview": "assets/produced/story-neural-v2.mp4",
+    "poster": "assets/produced/story-card-v2.jpg",
+    "captions": "assets/produced/story-v2.srt",
     "source": "remotion-edited-licensed-footage",
-    "description": "Вертикальная история о деталях автомобиля: кадры, титры и голос.",
-    "audioDescription": "Русская синтетическая озвучка Microsoft Irina, авторская синтезированная музыка",
+    "description": "Детали и ракурсы автомобиля: крупные титры, нейросетевая озвучка и переходы. Формат можно изменить в редакторе.",
+    "audioDescription": "Нейросетевая озвучка FishAudio S2.1 Pro через OpenRouter; авторская инструментальная подложка.",
     "segments": [
       {
         "start": 0,
-        "end": 6.333333333333333,
+        "end": 5,
         "title": "Форма",
         "transition": "cut"
       },
       {
-        "start": 6.333333333333333,
-        "end": 11.966666666666667,
+        "start": 5,
+        "end": 9.333333333333332,
         "title": "Характер",
         "transition": "fade"
       },
       {
-        "start": 11.966666666666667,
-        "end": 18.8,
+        "start": 9.333333333333332,
+        "end": 14.833333333333334,
         "title": "Движение",
         "transition": "slide"
       }
@@ -303,7 +410,7 @@
       {
         "sourceId": "hero/50.mp4",
         "start": 0,
-        "end": 6.333333333333333,
+        "end": 5,
         "speed": 1,
         "transition": "cut",
         "title": "Форма",
@@ -313,7 +420,7 @@
       {
         "sourceId": "hero/74.mp4",
         "start": 0,
-        "end": 5.633333333333334,
+        "end": 4.333333333333332,
         "speed": 1,
         "transition": "fade",
         "title": "Характер",
@@ -323,7 +430,7 @@
       {
         "sourceId": "hero/64.mp4",
         "start": 0,
-        "end": 6.833333333333334,
+        "end": 5.500000000000002,
         "speed": 1,
         "transition": "slide",
         "title": "Движение",
@@ -331,9 +438,65 @@
         "textPosition": "top"
       }
     ],
-    "audioFile": "assets/produced/story-audio.m4a",
+    "audioFile": "assets/produced/story-audio-v2.m4a",
     "originalAudio": false,
-    "cover": "assets/produced/story-cover.png"
+    "cover": "assets/produced/story-cover-v2.png",
+    "alternateAspects": [
+      "9:16",
+      "1:1"
+    ],
+    "captionTracks": {
+      "ru": {
+        "srt": "assets/produced/story-v2.srt",
+        "vtt": "assets/produced/story-v2.vtt"
+      }
+    },
+    "cues": [
+      {
+        "start": 0.55,
+        "end": 2.53,
+        "text": "Сначала ты замечаешь форму,"
+      },
+      {
+        "start": 2.53,
+        "end": 4.78,
+        "text": "свет подчёркивает каждую линию."
+      },
+      {
+        "start": 5.55,
+        "end": 7.73,
+        "text": "Потом открывается характер в"
+      },
+      {
+        "start": 7.73,
+        "end": 9.12,
+        "text": "ракурсе и в деталях."
+      },
+      {
+        "start": 9.883,
+        "end": 12.663,
+        "text": "И наконец, движение. Продолжение"
+      },
+      {
+        "start": 12.663,
+        "end": 13.703,
+        "text": "этой истории — за"
+      },
+      {
+        "start": 13.703,
+        "end": 14.173,
+        "text": "рулём."
+      }
+    ],
+    "captionStyle": {
+      "fontSize": 46,
+      "background": "rgba(8,8,8,.91)",
+      "safeBottom": 180,
+      "safeBottomRatio": 0.25,
+      "nativeControlsReserve": true
+    },
+    "voiceModel": "fish-audio/s2.1-pro-free:free",
+    "captionSource": "Actual neural narration word timing aligned with Whisper and checked against supplied exact scripts."
   },
   {
     "id": "travel",
@@ -357,32 +520,32 @@
         "Выбери свой маршрут. И посмотри, что за поворотом."
       ]
     ],
-    "duration": 18.133333333333333,
+    "duration": 14.466666666666667,
     "fps": 30,
     "width": 1280,
     "height": 720,
-    "preview": "assets/produced/travel.mp4",
-    "poster": "assets/produced/travel-card.jpg",
-    "captions": "assets/produced/travel.srt",
+    "preview": "assets/produced/travel-neural-v2.mp4",
+    "poster": "assets/produced/travel-card-v2.jpg",
+    "captions": "assets/produced/travel-v2.srt",
     "source": "remotion-edited-licensed-footage",
     "description": "Горный маршрут: реальные аэрокадры, плавный монтаж, музыка и короткий рассказ.",
-    "audioDescription": "Русская синтетическая озвучка Microsoft Irina, авторская синтезированная музыка",
+    "audioDescription": "Нейросетевая озвучка FishAudio S2.1 Pro через OpenRouter; авторская инструментальная подложка.",
     "segments": [
       {
         "start": 0,
-        "end": 6.366666666666666,
+        "end": 5.1,
         "title": "Смени привычный ракурс",
         "transition": "cut"
       },
       {
-        "start": 6.366666666666666,
-        "end": 12.033333333333333,
+        "start": 5.1,
+        "end": 10.033333333333333,
         "title": "Оставь место дороге",
         "transition": "fade"
       },
       {
-        "start": 12.033333333333333,
-        "end": 18.133333333333333,
+        "start": 10.033333333333333,
+        "end": 14.466666666666667,
         "title": "Маршрут начинается с тебя",
         "transition": "slide"
       }
@@ -403,7 +566,7 @@
       {
         "sourceId": "production/mountains.mp4",
         "start": 0,
-        "end": 6.366666666666666,
+        "end": 5.1,
         "speed": 1,
         "transition": "cut",
         "title": "Смени привычный ракурс",
@@ -413,7 +576,7 @@
       {
         "sourceId": "production/mountains.mp4",
         "start": 3,
-        "end": 8.666666666666668,
+        "end": 7.933333333333334,
         "speed": 1,
         "transition": "fade",
         "title": "Оставь место дороге",
@@ -423,7 +586,7 @@
       {
         "sourceId": "production/mountains.mp4",
         "start": 6,
-        "end": 12.1,
+        "end": 10.433333333333334,
         "speed": 1,
         "transition": "slide",
         "title": "Маршрут начинается с тебя",
@@ -431,9 +594,65 @@
         "textPosition": "top"
       }
     ],
-    "audioFile": "assets/produced/travel-audio.m4a",
+    "audioFile": "assets/produced/travel-audio-v2.m4a",
     "originalAudio": false,
-    "cover": "assets/produced/travel-cover.png"
+    "cover": "assets/produced/travel-cover-v2.png",
+    "alternateAspects": [
+      "9:16",
+      "1:1"
+    ],
+    "captionTracks": {
+      "ru": {
+        "srt": "assets/produced/travel-v2.srt",
+        "vtt": "assets/produced/travel-v2.vtt"
+      }
+    },
+    "cues": [
+      {
+        "start": 0.55,
+        "end": 3.03,
+        "text": "Иногда достаточно сменить ракурс."
+      },
+      {
+        "start": 3.03,
+        "end": 4.8,
+        "text": "И привычное остаётся позади."
+      },
+      {
+        "start": 5.65,
+        "end": 7.55,
+        "text": "Не торопись к финалу."
+      },
+      {
+        "start": 7.55,
+        "end": 9.11,
+        "text": "Самое интересное — по"
+      },
+      {
+        "start": 9.11,
+        "end": 9.82,
+        "text": "дороге."
+      },
+      {
+        "start": 10.583,
+        "end": 12.263,
+        "text": "Выбери свой маршрут. И"
+      },
+      {
+        "start": 12.263,
+        "end": 13.833,
+        "text": "посмотри, что за поворотом."
+      }
+    ],
+    "captionStyle": {
+      "fontSize": 46,
+      "background": "rgba(8,8,8,.91)",
+      "safeBottom": 180,
+      "safeBottomRatio": 0.25,
+      "nativeControlsReserve": true
+    },
+    "voiceModel": "fish-audio/s2.1-pro-free:free",
+    "captionSource": "Actual neural narration word timing aligned with Whisper and checked against supplied exact scripts."
   },
   {
     "id": "promo",
@@ -457,32 +676,32 @@
         "Твой следующий маршрут начинается сейчас. Продолжи эту историю."
       ]
     ],
-    "duration": 19.433333333333334,
+    "duration": 15.866666666666667,
     "fps": 30,
     "width": 1280,
     "height": 720,
-    "preview": "assets/produced/promo.mp4",
-    "poster": "assets/produced/promo-card.jpg",
-    "captions": "assets/produced/promo.srt",
+    "preview": "assets/produced/promo-neural-v2.mp4",
+    "poster": "assets/produced/promo-card-v2.jpg",
+    "captions": "assets/produced/promo-v2.srt",
     "source": "remotion-edited-licensed-footage",
     "description": "Короткий автомобильный анонс с динамичным монтажом, титрами и призывом к действию.",
-    "audioDescription": "Русская синтетическая озвучка Microsoft Irina, авторская синтезированная музыка",
+    "audioDescription": "Нейросетевая озвучка FishAudio S2.1 Pro через OpenRouter; авторская инструментальная подложка.",
     "segments": [
       {
         "start": 0,
-        "end": 6.3,
+        "end": 5.233333333333333,
         "title": "Выйди за привычное",
         "transition": "cut"
       },
       {
-        "start": 6.3,
-        "end": 12.3,
+        "start": 5.233333333333333,
+        "end": 10.166666666666668,
         "title": "Почувствуй движение",
         "transition": "fade"
       },
       {
-        "start": 12.3,
-        "end": 19.433333333333334,
+        "start": 10.166666666666668,
+        "end": 15.866666666666667,
         "title": "Продолжи историю",
         "transition": "slide"
       }
@@ -521,7 +740,7 @@
       {
         "sourceId": "hero/74.mp4",
         "start": 0,
-        "end": 6.3,
+        "end": 5.233333333333333,
         "speed": 1,
         "transition": "cut",
         "title": "Выйди за привычное",
@@ -531,7 +750,7 @@
       {
         "sourceId": "hero/64.mp4",
         "start": 0,
-        "end": 6.000000000000001,
+        "end": 4.9333333333333345,
         "speed": 1,
         "transition": "fade",
         "title": "Почувствуй движение",
@@ -541,7 +760,7 @@
       {
         "sourceId": "hero/50.mp4",
         "start": 0,
-        "end": 7.133333333333333,
+        "end": 5.699999999999999,
         "speed": 1,
         "transition": "slide",
         "title": "Продолжи историю",
@@ -549,9 +768,60 @@
         "textPosition": "top"
       }
     ],
-    "audioFile": "assets/produced/promo-audio.m4a",
+    "audioFile": "assets/produced/promo-audio-v2.m4a",
     "originalAudio": false,
-    "cover": "assets/produced/promo-cover.png"
+    "cover": "assets/produced/promo-cover-v2.png",
+    "alternateAspects": [
+      "9:16",
+      "1:1"
+    ],
+    "captionTracks": {
+      "ru": {
+        "srt": "assets/produced/promo-v2.srt",
+        "vtt": "assets/produced/promo-v2.vtt"
+      }
+    },
+    "cues": [
+      {
+        "start": 0.55,
+        "end": 2.43,
+        "text": "Каждая поездка начинается с"
+      },
+      {
+        "start": 2.43,
+        "end": 4.92,
+        "text": "решения. Куда отправишься ты?"
+      },
+      {
+        "start": 5.783,
+        "end": 7.903,
+        "text": "Почувствуй ритм. Посмотри на"
+      },
+      {
+        "start": 7.903,
+        "end": 9.873,
+        "text": "привычное с другого ракурса."
+      },
+      {
+        "start": 10.717,
+        "end": 12.777,
+        "text": "Твой следующий маршрут начинается"
+      },
+      {
+        "start": 12.777,
+        "end": 15.227,
+        "text": "сейчас. Продолжи эту историю."
+      }
+    ],
+    "captionStyle": {
+      "fontSize": 46,
+      "background": "rgba(8,8,8,.91)",
+      "safeBottom": 180,
+      "safeBottomRatio": 0.25,
+      "nativeControlsReserve": true
+    },
+    "voiceModel": "fish-audio/s2.1-pro-free:free",
+    "captionSource": "Actual neural narration word timing aligned with Whisper and checked against supplied exact scripts."
   },
   {
     "id": "interview",
@@ -579,10 +849,10 @@
     "fps": 30,
     "width": 1280,
     "height": 720,
-    "preview": "assets/produced/interview.mp4",
+    "preview": "assets/produced/interview-v2.mp4",
     "poster": "assets/produced/interview-cover.png",
     "source": "nasa-factual-interview-excerpt",
-    "description": "Фрагмент настоящего интервью с астронавтом: живой человек, оригинальная английская речь, анимированный титр и обложка. Источник: NASA’s Goddard Space Flight Center.",
+    "description": "Настоящее интервью с крупными русскими субтитрами. Оригинальная английская речь сохранена.",
     "audioDescription": "Оригинальный английский звук интервью; не ИИ-аватар и не рекомендация сервиса NASA.",
     "segments": [
       {
@@ -643,6 +913,69 @@
       }
     ],
     "originalAudio": true,
-    "cover": "assets/produced/interview-cover.png"
+    "cover": "assets/produced/interview-cover.png",
+    "cues": [
+      {
+        "start": 0,
+        "end": 1.14,
+        "text": "…на низкую околоземную орбиту."
+      },
+      {
+        "start": 1.38,
+        "end": 3.98,
+        "text": "Но делают они это немного по-разному."
+      },
+      {
+        "start": 4.24,
+        "end": 7.1,
+        "text": "Шаттл также может выводить на орбиту большой груз."
+      },
+      {
+        "start": 7.3,
+        "end": 8.7,
+        "text": "Поэтому нужно огромное количество топлива,"
+      },
+      {
+        "start": 8.7,
+        "end": 11.12,
+        "text": "чтобы вывести шаттл на низкую орбиту."
+      },
+      {
+        "start": 11.76,
+        "end": 13.54,
+        "text": "А твердотопливные ускорители…"
+      },
+      {
+        "start": 13.56,
+        "end": 15.88,
+        "text": "когда включаются и уносят вас со стартовой площадки,"
+      },
+      {
+        "start": 15.9,
+        "end": 18,
+        "text": "вас трясёт, качает и бросает из стороны в сторону."
+      }
+    ],
+    "captionTracks": {
+      "ru": {
+        "srt": "assets/produced/interview-ru-v2.srt",
+        "vtt": "assets/produced/interview-ru-v2.vtt"
+      },
+      "en": {
+        "srt": "assets/produced/interview-en-v2.srt",
+        "vtt": "assets/produced/interview-en-v2.vtt"
+      }
+    },
+    "captions": "assets/produced/interview-ru-v2.srt",
+    "captionSource": "English transcript cross-checked from original NASA audio; Russian translation by editor. Not NASA-issued subtitles.",
+    "captionStyle": {
+      "fontSize": 44,
+      "englishFontSize": 27,
+      "background": "rgba(8,10,12,.9)",
+      "safeBottom": 180,
+      "safeBottomRatio": 0.25,
+      "nativeControlsReserve": true,
+      "videoPanY": -80
+    }
   }
 ]
