@@ -1,0 +1,58 @@
+/* VMET / administrative cut room. */
+.shell{background:#101010;grid-template-columns:240px minmax(0,1fr)}
+.sidebar{background:#141414;border-right:1px solid #303030;padding:24px 16px}
+.sidebar .workspace{background:#1b1b1b;border-color:#333;padding:16px 12px;margin-block:24px}
+.sidebar .nav-label{padding-left:12px;color:#999;margin-bottom:12px}
+.sidebar nav{gap:3px}
+.sidebar nav a{min-height:40px;padding:9px 12px;position:relative;color:#b5b5b5;font-size:13px}
+.sidebar nav a.active{color:#fff;background:#2a2a2a}
+.sidebar nav a.active::before{content:"";width:2px;border-radius:2px;background:#eee;position:absolute;left:0;top:12px;bottom:12px}
+.sidebar-bottom{border-top:1px solid #333;padding-top:20px}
+.shell .main>header{min-height:72px;background:#131313;border-bottom:1px solid #303030}
+.main main{padding-top:36px}
+.page-heading{margin-bottom:28px;align-items:center}
+.page-heading h1{font-size:32px;letter-spacing:-.04em;font-weight:500}
+.page-heading p{color:#aaa}
+.metric,.activity-card,.system-card,.data-card,.settings-card{background:#191919;border:1px solid #333;border-radius:12px}
+.metric{padding:24px}
+.metric-value{margin-top:20px;font-size:40px;letter-spacing:-.05em}
+.metric-top{color:#aaa}
+.card-heading{border-bottom-color:#333}
+.card-heading h2,.settings-card h2{font-size:19px;letter-spacing:-.025em}
+.card-heading p,.settings-card p{color:#aaa}
+.ai-admin .settings-card{padding:28px}
+.ai-admin .card-heading{gap:20px;margin-bottom:20px}
+.ai-admin .card-heading>div{min-width:0}
+.ai-admin .card-heading button{align-self:flex-start;min-height:44px}
+.ai-admin-row{border-bottom-color:#333;padding-block:20px}
+.ai-admin-row strong{font-size:14px}
+.ai-admin-row small{color:#aaa}
+.ai-admin-row button{background:#252525;border-color:#444;min-height:40px}
+.ai-editor-card{background:#202020;border-color:#777;outline:none;scroll-margin-top:96px}
+.ai-admin-form{gap:20px 24px}
+.ai-admin-form label{color:#ccc;font-size:13px}
+.main :where(input,select,textarea):not([type=checkbox]){background:#111;border-color:#484848;border-radius:8px;min-height:44px}
+.main :where(input,select,textarea):not([type=checkbox]):focus-visible{outline:2px solid #bbb;outline-offset:2px}
+.main .search{border-color:#444;background:#111;padding-inline:12px}
+.main .search input{background:transparent;border:0}
+.table-toolbar{background:#1c1c1c;border-bottom:1px solid #333}
+.table-wrap thead{background:#151515}
+.table-wrap th{color:#aaa;font-size:12px;border-bottom:1px solid #3b3b3b}
+.table-wrap td{border-bottom:1px solid #303030;font-size:13px}
+.table-wrap td small{color:#aaa}
+.table-wrap tr:last-child td{border-bottom:0}
+.table-footer{background:#151515;color:#aaa;border-top:1px solid #333}
+.badge{border:1px solid #444;background:#252525;color:#ddd}
+.status-row{border-bottom-color:#333}
+.chart{padding-top:28px}
+.auth-admin .settings-card{padding:28px}
+.auth-setup-steps{color:#aaa;font-size:13px}
+.auth-admin .settings-card>p{max-width:72ch}
+.auth-callback input{font-family:monospace;font-size:12px}
+.auth-admin .dialog-actions{border-top:1px solid #444;padding-top:20px}
+.main button{font-size:13px}
+.main footer{color:#888;border-color:#333}
+.toast{background:#ededeb;color:#161616;border:1px solid #fff;padding:16px 20px;border-radius:10px}
+@media(hover:hover){.sidebar nav a:hover{background:#252525;color:#fff}.table-wrap tbody tr:hover{background:#202020}.ai-admin-row button:hover{background:#333;border-color:#888}}
+@media(max-width:1100px){.shell{grid-template-columns:208px minmax(0,1fr)}.main main{padding-inline:24px}.shell .main>header{padding-inline:24px}.ai-admin .card-heading{flex-wrap:wrap}.ai-admin .settings-card{padding:24px}.overview-grid{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:767px){.shell{display:block}.main main{padding:28px 20px}.sidebar{border-right-color:#444}.page-heading h1{font-size:28px}.ai-admin-form,.settings-grid{grid-template-columns:minmax(0,1fr)}.ai-admin .settings-card,.auth-admin .settings-card{padding:20px}.ai-admin .card-heading button{width:100%}.ai-admin-row{gap:12px}.ai-admin-row>div{min-width:100%}.ai-admin-row button{flex:1}.auth-admin .dialog-actions{flex-wrap:wrap;gap:8px}.auth-admin .dialog-actions button{flex:1 0 auto}.metrics{gap:12px}.metric{padding:20px}.metric-value{font-size:32px}.table-toolbar .search{min-width:0;width:100%}.shell .main>header{padding-inline:20px}}

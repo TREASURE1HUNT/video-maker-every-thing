@@ -9,6 +9,8 @@ import './style.css';
 import '../../dist/font-face.css';
 import '../../dist/taste.css';
 import './taste-admin.css';
+import '../../dist/polish.css';
+import './polish-admin.css';
 const sections=[['overview','Обзор',LayoutDashboard],['users','Пользователи',Users],['ai','ИИ и скиллы',Bot],['models','Доступ к ИИ',Bot],['credits','Кредиты',Coins],['tokens','API-токены',KeyRound],['promos','Промокоды',Ticket],['campaigns','Акции',Megaphone],['audit','Журнал действий',ScrollText],['billing','Подписки',Coins],['auth','Вход и письма',LockKeyhole],['settings','Настройки',Settings]] as const;
 const labels:any={owner:'Владелец',admin:'Администратор',finance:'Финансы',support:'Поддержка',user:'Пользователь',active:'Активен',suspended:'Заблокирован',free:'Free',lite:'Lite',plus:'Plus',pro:'Pro',team:'Legacy'};
 const fmt=(n:any)=>Number(n||0).toLocaleString('ru-RU');
