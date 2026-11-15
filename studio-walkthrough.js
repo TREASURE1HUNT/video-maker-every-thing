@@ -1,0 +1,1 @@
+(()=>{const video=document.querySelector('#studio-walkthrough');if(!video)return;document.addEventListener('visibilitychange',()=>{if(document.hidden)video.pause()});addEventListener('pagehide',()=>video.pause());new IntersectionObserver(([entry])=>{if(!entry.isIntersecting)video.pause()},{threshold:.1}).observe(video)})();

@@ -14,7 +14,7 @@ test('monochrome refinement retains reduced-motion, visible focus and small-scre
 });
 test('home uses authored background video, an explicit pause action and functional destinations',()=>{
  const s=fs.readFileSync('dist/index.html','utf8');
- assert.match(s,/<video id="hero-background"[^>]*autoplay muted loop playsinline/);assert.match(s,/assets\/hero\/vmet-promo-35840fe8429e.mp4/);
+ assert.match(s,/<video id="hero-background"[^>]*autoplay muted loop playsinline/);assert.match(s,/assets\/hero\/vmet-promo-59b5fb2afb59.mp4/);
  assert.match(s,/id="hero-background-toggle"/);assert.match(s,/href="workspace.html"/);assert.match(s,/href="editor.html\?demo=1"/);
  assert.ok(!s.includes('id="scene"'));
 });
