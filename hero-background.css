@@ -13,8 +13,8 @@ body:has(.homepage-film) .site-header .account-button,body:has(.homepage-film) .
 body:has(.homepage-film) .site-header .account-button svg,body:has(.homepage-film) .site-header .hero-background-toggle svg{width:16px;height:16px;min-width:16px;fill:none;stroke:currentColor;stroke-width:1.7}
 .site-header .hero-background-toggle:focus-visible{outline:2px solid currentColor;outline-offset:3px}
 .site-header .hero-background-toggle:disabled{opacity:.5}
-.ref-hero.taste-intro.homepage-film{position:relative;isolation:isolate;overflow:hidden;max-width:none;width:100%;aspect-ratio:16/9;height:auto;min-height:0;padding:0!important;margin:0;background:#101010 url('assets/hero/vmet-promo-poster.jpg') center/cover no-repeat;display:block}
-.homepage-film .hero-background{position:absolute;inset:0;width:100%;height:100%;max-height:none;object-fit:contain;object-position:center;z-index:0;pointer-events:none;opacity:1}
+.ref-hero.taste-intro.homepage-film{position:relative;isolation:isolate;overflow:hidden;max-width:none;width:100%;aspect-ratio:auto;height:100svh;min-height:0;max-height:none;max-block-size:none;padding:0!important;margin:0;background:#101010;display:block}
+.homepage-film .hero-background{position:absolute;inset:0;width:100%;height:100%;max-height:none;object-fit:cover;object-position:left center;z-index:0;pointer-events:none;opacity:1}
 @media(max-width:639px){
 body:has(.homepage-film) .site-header.nav{height:52px;min-height:52px;padding:8px 12px;gap:8px;flex-wrap:nowrap}
 body:has(.homepage-film) .site-header .brand-lockup img{width:22px;height:24px}
@@ -26,3 +26,5 @@ body:has(.homepage-film) .site-header .editor-link svg{display:block}
 body:has(.homepage-film) .site-header .account-button,body:has(.homepage-film) .site-header .hero-background-toggle{width:28px;height:28px;min-width:28px;min-height:28px;padding:6px}
 }
 .site-header .hero-background-toggle .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+
+@media(max-width:1023px){.ref-hero.taste-intro.homepage-film{height:auto;aspect-ratio:16/9;max-height:none;max-block-size:none}.homepage-film .hero-background{object-fit:contain;object-position:center}}
