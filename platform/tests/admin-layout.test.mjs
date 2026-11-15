@@ -1,0 +1,5 @@
+import test from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';
+const css=fs.readFileSync('admin/src/layout.css','utf8'),app=fs.readFileSync('admin/src/main.tsx','utf8');
+test('admin sidebar occupies a real grid column without stale fixed offsets',()=>{assert.match(css,/grid-template-columns:var\(--admin-sidebar\) minmax\(0,1fr\)/);assert.match(css,/\.shell>\.sidebar\{position:sticky;inset:auto/);assert.match(css,/\.shell>\.main\{width:auto;min-width:0;margin:0/)});
+test('admin mobile menu has a single 959px breakpoint, backdrop and keyboard dismissal',()=>{assert.match(css,/@media\(max-width:959px\)/);assert.match(app,/aria-controls="admin-navigation"/);assert.match(app,/aria-expanded=\{mobile\}/);assert.match(app,/e.key==='Escape'/);assert.match(app,/className="admin-menu-backdrop"/)});
+test('layout override is loaded after older theme and wide tables scroll internally',()=>{assert.ok(app.indexOf("import './layout.css'")>app.indexOf("import './polish-admin.css'"));assert.match(css,/\.main \.table-wrap\{width:100%;max-width:100%;overflow-x:auto/)});
