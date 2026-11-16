@@ -1,3 +1,4 @@
+import {validateVisualFrames} from './visual-context.mjs';
 import {refreshCredits} from './credit-wallet.mjs';
 import {reconcileOwner} from './ownership.mjs';
 import {telegramPublic,telegramAdmin} from './telegram.mjs';
@@ -75,7 +76,7 @@ async function gateway(req,env){
  const allowed=JSON.parse(user.models);if(!allowed.includes('*')&&!allowed.includes(model.id))fail(403,'Модель не разрешена пользователю');
  if(!await aiReady(env.DB,env,model))fail(503,'Провайдер ИИ ещё не подключён. Кредиты не списаны');
  const skill=await resolveSkill(env.DB,user,b.skill_id||b.settings?.skill_id);
- if(b.assets&&!Array.isArray(b.assets))fail(400,'Некорректный список материалов');
+ if(b.assets&&!Array.isArray(b.assets))fail(400,'Некорректный список материалов');validateVisualFrames(b);
  if(!Array.isArray(b.messages)||b.messages.length>40||!b.messages.every(m=>['user','assistant'].includes(m.role)&&typeof m.content==='string'&&m.content.length<=14000))fail(400,'Некорректные сообщения');
  const key=str(req.headers.get('Idempotency-Key')||b.requestId,100),idem=user.id+':'+key;
  let prior=await first(env.DB,'SELECT * FROM requests WHERE idem=?',idem);
