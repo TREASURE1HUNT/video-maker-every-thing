@@ -22,4 +22,4 @@ const app={async fetch(req,env){
  const response=await fetch(target,{method:req.method,headers:req.headers.has('Range')?{Range:req.headers.get('Range')}:undefined});const headers=new Headers(response.headers);if(/\.(?:html|js|css|json)$/.test(url.pathname)||url.pathname==='/'){headers.set('Cache-Control','no-store');headers.delete('Expires');headers.delete('Age')}return new Response(response.body,{status:response.status,statusText:response.statusText,headers});
 }};
 
-export default {async fetch(req,env){return secureResponse(await app.fetch(req,env))}};
+export default {async fetch(req,env){return secureResponse(await app.fetch(req,env),{localASR:new URL(req.url).pathname==='/local-asr-worker-v1.js'})}};

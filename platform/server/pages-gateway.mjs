@@ -8,4 +8,4 @@ const app={async fetch(req,env){const url=new URL(req.url);if(!url.pathname.star
  const r=await fetch(new Request(backend+url.pathname+url.search,{method:req.method,headers,redirect:'manual',...(!['GET','HEAD'].includes(req.method)?{body:req.body,duplex:'half'}:{})}));const h=new Headers(r.headers);h.set('Cache-Control','no-store');const location=h.get('Location');if(location?.startsWith(backend+'/'))h.set('Location',url.origin+location.slice(backend.length));return new Response(r.body,{status:r.status,headers:h});
 }};
 
-export default {async fetch(req,env){return secureResponse(await app.fetch(req,env))}};
+export default {async fetch(req,env){return secureResponse(await app.fetch(req,env),{localASR:new URL(req.url).pathname==='/local-asr-worker-v1.js'})}};
