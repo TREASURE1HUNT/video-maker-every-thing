@@ -1,3 +1,4 @@
+import {aiRequestStatus} from './ai-request-status.mjs';
 import {transcriptionRoutes} from './transcription.mjs';
 import {validateVisualFrames} from './visual-context.mjs';
 import {refreshCredits} from './credit-wallet.mjs';
@@ -91,13 +92,13 @@ async function gateway(req,env){
  if(!r[0].meta.changes){const repeated=await first(env.DB,'SELECT status,response FROM requests WHERE idem=?',idem);if(repeated?.status==='complete')return json(JSON.parse(repeated.response));if(repeated)return json({error:'Этот запрос уже выполняется. Повторного списания нет.',code:'REQUEST_IN_PROGRESS'},409);const balance=(await first(env.DB,'SELECT credits FROM users WHERE id=?',user.id))?.credits||0;return json({error:`Недостаточно кредитов: на балансе ${balance}, стоимость запроса ${model.cost}. Не хватает ${Math.max(0,model.cost-balance)}.`,code:'INSUFFICIENT_CREDITS',balance,required:model.cost,missing:Math.max(0,model.cost-balance)},402)}
  try{
   const data=validateAIResult(await executeAI(env,user,model,{...b,executionId:id},skill),b);
-  await stmt(env.DB,"UPDATE requests SET status='complete',response=? WHERE id=?",JSON.stringify(data),id).run();return json(data);
+  const completed=await stmt(env.DB,"UPDATE requests SET status='complete',response=? WHERE id=? AND status='reserved'",JSON.stringify(data),id).run();if(!completed.meta.changes)return json({error:'Запрос уже завершён или его резерв возвращён.',code:'REQUEST_EXPIRED'},409);return json(data);
  }catch(error){
-  await env.DB.batch([
+  const failure=aiFailure(error);await env.DB.batch([
    stmt(env.DB,"INSERT OR IGNORE INTO ledger SELECT ? ,user_id,cost,'Возврат: ошибка ИИ',?,? FROM requests WHERE id=? AND status='reserved'",id+':refund',user.email,now(),id),
    stmt(env.DB,"UPDATE users SET credits=credits+? WHERE id=? AND EXISTS(SELECT 1 FROM requests WHERE id=? AND status='reserved')",model.cost,user.id,id),
-   stmt(env.DB,"UPDATE requests SET status='failed' WHERE id=? AND status='reserved'",id)
-  ]);const failure=aiFailure(error);console.error('AI_REQUEST_FAILED',{requestId:id,model:model.id,status:error?.upstreamStatus||null,code:failure.code});fail(502,failure.message+' Кредиты возвращены. Код: '+failure.code);
+   stmt(env.DB,"UPDATE requests SET status='failed',response=? WHERE id=? AND status='reserved'",JSON.stringify({error:failure.message+' Кредиты возвращены. Код: '+failure.code,code:failure.code}),id)
+  ]);console.error('AI_REQUEST_FAILED',{requestId:id,model:model.id,status:error?.upstreamStatus||null,code:failure.code});fail(502,failure.message+' Кредиты возвращены. Код: '+failure.code);
  }
 }
 export async function api(req,env){
@@ -110,7 +111,7 @@ export async function api(req,env){
   if(req.method!=='GET'&&req.headers.get('Origin')&&req.headers.get('Origin')!==url.origin)fail(403,'Другой источник запроса');
   if(path==='/v1/chat'&&req.method==='POST')return await gateway(req,env);
   if(path==='/api/redeem'&&req.method==='POST'){const {user,token}=await tokenUser(req,env);if(token.scope!=='promo:redeem')fail(403,'Токен не разрешает активацию промокодов');if(env.CREDIT_WEEKLY_ENABLED==='1')await refreshCredits(env.DB,user);return json(await redeem(env.DB,user,(await body(req)).code))}
-  const u=await identity(req,env);if(env.CREDIT_WEEKLY_ENABLED==='1')await refreshCredits(env.DB,u);const tgAdmin=await telegramAdmin(req,env,u);if(tgAdmin)return tgAdmin;const perms=permissions[u.role]||[];const enhanced=await enhancementRoutes(req,env,u);if(enhanced)return enhanced;const paymentResult=await paymentAdmin(req,env,u);if(paymentResult)return paymentResult;const authAdminResult=await adminAuth(req,env,u);if(authAdminResult)return authAdminResult;const voiceAdminResult=await voiceAdmin(req,env,u);if(voiceAdminResult)return voiceAdminResult;const transcriptionResult=await transcriptionRoutes(req,env,u);if(transcriptionResult)return transcriptionResult;const speechResult=await speechRoutes(req,env,u);if(speechResult)return speechResult;const aiResult=await aiRoutes(req,env,u);if(aiResult)return aiResult;const accountResult=await account(req,env,u);if(accountResult)return accountResult;const customerResult=await billing(req,env,u);if(customerResult)return customerResult;
+  const u=await identity(req,env);const requestStatus=await aiRequestStatus(req,env,u);if(requestStatus)return requestStatus;if(env.CREDIT_WEEKLY_ENABLED==='1')await refreshCredits(env.DB,u);const tgAdmin=await telegramAdmin(req,env,u);if(tgAdmin)return tgAdmin;const perms=permissions[u.role]||[];const enhanced=await enhancementRoutes(req,env,u);if(enhanced)return enhanced;const paymentResult=await paymentAdmin(req,env,u);if(paymentResult)return paymentResult;const authAdminResult=await adminAuth(req,env,u);if(authAdminResult)return authAdminResult;const voiceAdminResult=await voiceAdmin(req,env,u);if(voiceAdminResult)return voiceAdminResult;const transcriptionResult=await transcriptionRoutes(req,env,u);if(transcriptionResult)return transcriptionResult;const speechResult=await speechRoutes(req,env,u);if(speechResult)return speechResult;const aiResult=await aiRoutes(req,env,u);if(aiResult)return aiResult;const accountResult=await account(req,env,u);if(accountResult)return accountResult;const customerResult=await billing(req,env,u);if(customerResult)return customerResult;
   if(path==='/api/me')return json({user:u,permissions:perms,gatewayConfigured:!!env.AI_GATEWAY_URL||!!env.OPENROUTER_API_KEY});
   if(!perms.length)fail(403,'Требуется роль администратора');
   const section=path.split('/')[3];
