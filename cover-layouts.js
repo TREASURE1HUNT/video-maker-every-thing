@@ -1,0 +1,1 @@
+export const COVER_LAYOUTS={poster:'Фото + акцент',split:'Контрастная плашка',editorial:'Редакционная',spotlight:'Герой крупно',magazine:'Журнальная',diagonal:'Диагональ',cinema:'Кинопостер',minimal:'Минимализм',sidebar:'Боковая колонка'};
