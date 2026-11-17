@@ -5,3 +5,5 @@ export function drawMotionScene(ctx,canvas,clip,offset,source){const s=motionSet
 export async function createMotionFile(product){const canvas=document.createElement('canvas');canvas.width=1280;canvas.height=720;drawMotionScene(canvas.getContext('2d'),canvas,{motionDesign:{enabled:true,product}},1,null);const blob=await new Promise(r=>canvas.toBlob(r,'image/png'));return new File([blob],'SaaS-motion-концепт.png',{type:'image/png'});}
 
 export function motionFeatures(topic,provided){if(Array.isArray(provided)&&provided.length)return provided.slice(0,3).map(s=>String(s).slice(0,30));const features=[];for(const [re,label]of [[/монтаж/i,'Монтаж'],[/титр/i,'Субтитры'],[/обложк/i,'Обложка'],[/заказ/i,'Заказы'],[/аналит/i,'Аналитика'],[/отч[её]т/i,'Отчёты'],[/проект/i,'Проекты'],[/команд/i,'Команда']])if(re.test(topic))features.push(label);return features.length?features.slice(0,3):['Ваша идея','Рабочий процесс','Готовый результат'];}
+
+export function motionCanvasSize(aspect){return aspect==='9:16'?[1080,1920]:aspect==='1:1'?[1080,1080]:[1920,1080]}
