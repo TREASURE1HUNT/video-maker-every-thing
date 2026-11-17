@@ -98,7 +98,7 @@ async function gateway(req,env){
    stmt(env.DB,"INSERT OR IGNORE INTO ledger SELECT ? ,user_id,cost,'Возврат: ошибка ИИ',?,? FROM requests WHERE id=? AND status='reserved'",id+':refund',user.email,now(),id),
    stmt(env.DB,"UPDATE users SET credits=credits+? WHERE id=? AND EXISTS(SELECT 1 FROM requests WHERE id=? AND status='reserved')",model.cost,user.id,id),
    stmt(env.DB,"UPDATE requests SET status='failed',response=? WHERE id=? AND status='reserved'",JSON.stringify({error:failure.message+' Кредиты возвращены. Код: '+failure.code,code:failure.code}),id)
-  ]);console.error('AI_REQUEST_FAILED',{requestId:id,model:model.id,status:error?.upstreamStatus||null,code:failure.code});fail(502,failure.message+' Кредиты возвращены. Код: '+failure.code);
+  ]);console.error('AI_REQUEST_FAILED',{requestId:id,model:model.id,status:error?.upstreamStatus||null,diagnostic:error?.diagnostic||(['TimeoutError','AbortError','TypeError'].includes(error?.name)?error.name:'response_validation'),code:failure.code});fail(502,failure.message+' Кредиты возвращены. Код: '+failure.code);
  }
 }
 export async function api(req,env){
